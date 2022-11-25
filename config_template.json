@@ -1,0 +1,7 @@
+{
+    "weather":{
+        "api_key":"<api_key>",
+        "lat":"<latitude>",
+        "lon":"<longitude>"
+    }
+}
