@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { LineChartModule } from './line-chart/line-chart.module';
+import { WeatherChartModule } from './weather-chart/weather-chart.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +12,7 @@ import { LineChartModule } from './line-chart/line-chart.module';
   imports: [
     BrowserModule,
     HttpClientModule,
-    LineChartModule
+    WeatherChartModule
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent]
