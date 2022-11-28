@@ -42,11 +42,11 @@ export class OpenWeatherMap implements WeatherProvider {
 
     private WeatherForecastFromElement(element:any):WeatherForecast{
         let forecast = new WeatherForecast();
-        forecast.TimeStamp = element.dt;
+        forecast.TimeStamp = element.dt*1000;
         forecast.Weather.Clouds=element.clouds.all
         forecast.Weather.Description=element.weather[0].description
         forecast.Weather.Humidity=1// todo
-        forecast.Weather.Precipitation.Probability = element.pop
+        forecast.Weather.Precipitation.Probability = element.pop * 100
         if (element.rain!=undefined){
             forecast.Weather.Precipitation.Rain=element.rain["3h"];
         }

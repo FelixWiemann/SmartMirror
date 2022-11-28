@@ -10,7 +10,6 @@ export class Config{
     public static create():void{
         new Config()
     }
-    
 }
 
 class WeatherCfg{
