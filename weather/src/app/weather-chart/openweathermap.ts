@@ -27,7 +27,6 @@ export class OpenWeatherMap implements WeatherProvider {
             data.forEach(
                 (args)=>{
                     args.list.forEach((element:any) => {
-                        console.log(element, this.WeatherForecastFromElement(element))
                         forecast.push(this.WeatherForecastFromElement(element))
                     });
                     resolve(forecast);

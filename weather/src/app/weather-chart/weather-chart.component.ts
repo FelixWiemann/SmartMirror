@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import Chart from 'chart.js/auto';
+import Chart, { ChartArea } from 'chart.js/auto';
+import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { WeatherForecast, WeatherProvider } from './weather-provider';
+
 
 @Component({
   selector: 'app-line-chart',
@@ -11,73 +13,144 @@ import { WeatherForecast, WeatherProvider } from './weather-provider';
 export class WeatherChartComponent implements OnInit {
 
   constructor() { }
-  public chart?: Chart;
+  public tmp_chart?: Chart;
+  public cloud_chart?: Chart;
   weatherdata :WeatherForecast[] | undefined;
-
   @Input("WeatherProvider") provider? : WeatherProvider;
+  @Input("UpdateInterval") timer= 60;
+  interval?:NodeJS.Timer;
 
-  async ngOnInit(): Promise<void> {
+  private getLabel(item:WeatherForecast):string{
+    var dayOfWeek = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]; 
+    let label = ""
+    let date = new Date(item.TimeStamp)
+    label=dayOfWeek[date.getDay()];
+    return label
+  }
+
+  private iniChart(){
+    console.log("creating chart")
     this.provider?.getForeCast().then((data)=>{
       this.weatherdata = data; 
       this.createChart(); 
-      console.log("received data")
+      this.updateChart();
+      this.interval = setInterval(()=>
+      {
+        this.provider?.getForeCast().then((data)=>{this.updateChart()})
+      },1000*60*this.timer)
     })
   }
 
-  public addData(label:string, data:any){
-    this.chart?.data?.labels?.push(label);
-    this.chart?.data?.datasets?.forEach((element:any) => {
-      element.data.push(data)
-    });
+  async ngOnInit(): Promise<void> {
+    this.iniChart();
   }
 
-  createChart(){
-    
+  private updateChart(){
     let lables:string[]=[];
-    let chartData:any;
-    if (this.weatherdata!=undefined){
-      this.weatherdata.forEach((cast)=>{lables.push(new Date(cast.TimeStamp).toUTCString())})
-      chartData = {// values on X-Axis
+    if (this.weatherdata==undefined) return;
+    this.weatherdata.forEach((cast)=>{lables.push(this.getLabel(cast))})
+    if (this.cloud_chart==undefined) return;
+    if (this.tmp_chart==undefined) return;
+    this.cloud_chart.data.labels=lables
+    this.cloud_chart.data.datasets[0].data=this.weatherdata.map((cast)=>cast.Weather.Clouds)
+    this.cloud_chart.data.datasets[1].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Probability)
+    this.tmp_chart.data.labels=lables
+    this.tmp_chart.data.datasets[0].data=this.weatherdata.map((cast)=>cast.Weather.Temperature.Temperature)
+    this.tmp_chart.data.datasets[1].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Snow)
+    this.tmp_chart.data.datasets[2].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Snow+cast.Weather.Precipitation.Rain)
+    this.cloud_chart.update()
+    this.tmp_chart.update()
+    console.log("updated weather charts")
+  }
+
+
+  createChart(){
+    let lables:string[]=[];
+    if (this.weatherdata==undefined) return;
+    this.weatherdata.forEach((cast)=>{lables.push(this.getLabel(cast))})
+
+    this.cloud_chart = new Chart("cloud_chart", {
+      type:'line',
+      options:
+      {aspectRatio:1.7,
+        scales:
+        {
+          yPercentageScale:{
+            type: 'linear',
+            position: 'right',
+          },
+          yPrecipitationScale:{
+            type:'linear',
+            position: 'right',
+          },
+        },
+        datasets:
+        {
+          line:
+          {
+            tension:0.5
+          }
+        },
+      },
+      data:{// values on X-Axis
         labels: lables,  
         datasets: [
-         {
-            label: 'Temperature [°C]',
-            data:this.weatherdata.map((cast)=>cast.Weather.Temperature.Temperature),
-            yAxisID:'temperatureScale',
-            backgroundColor: 'rgb(200, 0, 0)',
-            borderColor: 'rgb(200, 0, 0)'
-          },
           {
             label: 'Cloudiness [%]',
-            data:this.weatherdata.map((cast)=>cast.Weather.Clouds),
-            yAxisID:'percentageScale',
+            data:[],
+            yAxisID:'yPercentageScale',
             backgroundColor: 'rgb(150, 150, 150)',
             borderColor: 'rgb(170, 170, 170)'
           },
           {
             label: 'Downpour [%]',
-            data:this.weatherdata.map((cast)=>cast.Weather.Precipitation.Probability),
-            yAxisID:'precipitationScale',
+            data:[],
+            yAxisID:'yPrecipitationScale',
             backgroundColor: 'rgb(155, 102, 102)',
             borderColor: 'rgb(155, 102, 102)'
           },
-          {
-            label: 'Downpour [ml]',
-            data:this.weatherdata.map((cast)=>cast.Weather.Precipitation.Snow+cast.Weather.Precipitation.Rain),
-            yAxisID:'precipitationAmount',
-            backgroundColor: 'rgb(173,216,230)',
-            borderColor: 'rgb(173,216,230)',
-            fill:{
-              target:'origin',  
-            }
-          }
+          
         ],
       }
-    }
+    })
 
-    this.chart = new Chart("weather_chart", {
+    this.tmp_chart = new Chart("tmp_chart", {
       type: 'line', //this denotes tha type of chart
-      data: chartData,
+      data: {// values on X-Axis
+        labels: lables,  
+        datasets: [
+          {
+            label: 'Temperature [°C]',
+            data:[],
+            yAxisID:'yTemperatureScale',
+            borderColor: function(context:any) {
+              const chart = context.chart;
+              const {ctx, chartArea} = chart;
+              if (!chartArea) {
+                // This case happens on initial chart load
+                return;
+              }
+              return getGradient(ctx, chartArea);
+            }
+          },
+          { 
+            type:'bar',
+            label: 'Snow [ml]',
+            data:[],
+            yAxisID:'yPrecipitationAmount',
+            backgroundColor: 'rgba(173,216,250, .5)',
+            borderColor: 'rgba(173,216,250, .5)'
+          },
+          {
+            type:'bar',
+            label: 'Rain [ml]',
+            data:[],
+            yAxisID:'yPrecipitationAmount',
+            backgroundColor: 'rgba(73,116,230, .5)',
+            borderColor: 'rgba(73,116,230, .5)',
+          }
+        ],
+      },
       options: {
         aspectRatio:1.7,
         datasets:{
@@ -86,26 +159,44 @@ export class WeatherChartComponent implements OnInit {
           }
         },
         scales:{
-          temperatureScale:{
+          yTemperatureScale:{
             type: 'linear',
             position: 'left',
+            title:{
+              display:true,
+              text:'Temperature [°C]',
+              align:'center'
+            }
           },
-          percentageScale:{
-            type: 'linear',
+          yPrecipitationAmount:{
+            type:'linear',
             position: 'right',
+            title:{
+              display:true,
+              text:'Downpour [ml]',
+              align:'center'
+            }
           },
-          precipitationScale:{
-            type:'linear',
-            position: 'right'
-          },
-          precipitationAmount:{
-            type:'linear',
-            position: 'right'
-          }
         }
       }
-    });
+    });  
   }
-  public _reload = true;
+}
 
+function getGradient(ctx:CanvasRenderingContext2D, chartArea:ChartArea):CanvasGradient {
+  let width, height, gradient;
+  const chartWidth = chartArea.right - chartArea.left;
+  const chartHeight = chartArea.bottom - chartArea.top;
+  if (!gradient || width !== chartWidth || height !== chartHeight) {
+    // Create the gradient because this is either the first render
+    // or the size of the chart has changed
+    width = chartWidth;
+    height = chartHeight;
+    gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+    gradient.addColorStop(1, 'rgb(255,0,0)');
+    gradient.addColorStop(0.5, 'rgb(0,255,0)');
+    gradient.addColorStop(0, 'rgb(0,0,255)');
+  }
+
+  return gradient;
 }

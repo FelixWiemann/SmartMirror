@@ -1,4 +1,15 @@
 <div  class="chart-container"> 
-    <canvas  id="weather_chart">{{ chart }}</canvas>
+    <table>
+        <tr>
+            <td>
+                <div class="chartCell"><canvas id="tmp_chart">{{ tmp_chart }}</canvas>
+                </div>
+            </td>
+            <td>
+                <div class="chartCell"><canvas  id="cloud_chart">{{ cloud_chart }}</canvas>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
 
