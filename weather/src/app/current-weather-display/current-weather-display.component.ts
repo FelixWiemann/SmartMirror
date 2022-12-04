@@ -13,24 +13,45 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   currentWeatherImage="../../assets/weather/animated/cloudy-day-1.svg"
   weather_text = ""
   time = ""
+  document_temperature_id = "tmp_value"
+  document_weather_text_id = "weather_Text"
+
   ngOnInit(): void {
     this.updateData()
     this.updateTime()
     setInterval(()=>this.updateTime(),1000)
     setInterval(()=>this.updateData(),1000*60*this.timer)
   }
+
   private updateData():void{
     this.provider?.getCurrentWeather().then((cast)=>
     {
-      this.temperature = cast.Weather.Temperature.Temperature
-      this.currentWeatherImage = cast.Weather.WeatherIcon
-      this.weather_text = cast.Weather.Description
-      console.log("updated current weather data")
-      let temp = document.getElementById('tmp')
-      if (temp!=null) {
-        temp.style.color=this.getGradientColor('#ff0000', '#0000ff', 0.50)
-      }
+      this.updateScreen(cast);
     })
+  }
+
+  updateScreen(forecast:WeatherForecast){
+    this.temperature = forecast.Weather.Temperature.Temperature
+    this.currentWeatherImage = forecast.Weather.WeatherIcon
+    this.weather_text = forecast.Weather.Description
+    console.log("updated current weather data")
+    let temp = document.getElementById(this.document_temperature_id)
+    if (temp!=null) {
+      temp.style.color=this.getColorForTemperature(this.temperature)
+    }
+  }
+
+  getPercentage(temp:number, min: number, max: number):number{
+    let tmpDiff = max-min
+    let p = (temp-min)/tmpDiff
+    return p
+  }
+
+  getColorForTemperature(temp: number):string{
+    // red(50) -> green(10)
+    if (temp>10) return this.getGradientColor('#00ff00', '#ff0000',this.getPercentage(temp, 10,50))
+    // green(10) -> blue(-10)
+    return this.getGradientColor('#0000ff', '#00ff00',this.getPercentage(temp, -10,10))
   }
 
   private updateTime():void{
@@ -38,7 +59,17 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
       this.time = date.getHours().toString().padStart(2,"0")+ ":"+ date.getMinutes().toString().padStart(2,"0") +":"+ date.getSeconds().toString().padStart(2,"0")
   }
 
+  /**
+   * color gradient based on https://stackoverflow.com/questions/3080421/javascript-color-gradient
+   * 
+   * @param start_color start color
+   * @param end_color 
+   * @param percent of the way between start and end color (0=> start, 1=>end, 0.5 halfway inbetween)
+   * @returns mixed color
+   */
   getGradientColor = function(start_color:string, end_color:string, percent:number) {
+    if (percent>=1) return end_color;
+    if (percent<=0) return start_color;
     // strip the leading # if it's there
     start_color = start_color.replace(/^\s*#|\s*$/g, '');
     end_color = end_color.replace(/^\s*#|\s*$/g, '');
