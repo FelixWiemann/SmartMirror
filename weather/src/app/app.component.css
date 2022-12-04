@@ -1,0 +1,11 @@
+.parent{
+    position: relative;
+}
+.chart_container{
+    position: absolute;
+    right: 0cm;
+    
+}
+.current_weather_container{
+    position: absolute;
+}

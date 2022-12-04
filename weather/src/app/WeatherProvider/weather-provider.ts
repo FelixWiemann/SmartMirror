@@ -3,15 +3,16 @@
  */
 export interface WeatherProvider {
     /**
-     * get forecast 
+     * get the forecast data from the provider
+     * @returns a promise of list of forecast data points
      */
      getForeCast():Promise<WeatherForecast[]>;
 
     /**
      * get current weather data
+     * @returns a promise of the current weather data as a single forecast
      */
      getCurrentWeather():Promise<WeatherForecast>;
-
 }
 
 export class WeatherForecast{
@@ -96,6 +97,10 @@ export class WeatherData{
      * Group of weather parameters (Rain, Snow, Extreme etc.)
      */
      public Description:string="";
+     /**
+      * path to the weather icon to use
+      */
+     public WeatherIcon:string="";
     /**
      * temperature data
      */

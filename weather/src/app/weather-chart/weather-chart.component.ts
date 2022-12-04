@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import Chart, { ChartArea } from 'chart.js/auto';
-import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
-import { WeatherForecast, WeatherProvider } from './weather-provider';
+import { __extends } from 'tslib';
+import { WeatherForecast } from '../WeatherProvider/weather-provider';
+import { WeatherChart } from '../WeatherProvider/WeatherChart';
 
 
 @Component({
@@ -10,15 +11,13 @@ import { WeatherForecast, WeatherProvider } from './weather-provider';
   styleUrls: ['./weather-chart.component.css'],
 })
 
-export class WeatherChartComponent implements OnInit {
+export class WeatherChartComponent extends WeatherChart implements OnInit {
 
-  constructor() { }
   public tmp_chart?: Chart;
   public cloud_chart?: Chart;
   weatherdata :WeatherForecast[] | undefined;
-  @Input("WeatherProvider") provider? : WeatherProvider;
-  @Input("UpdateInterval") timer= 60;
   interval?:NodeJS.Timer;
+  aspect_ratio=1.7
 
   private getLabel(item:WeatherForecast):string{
     var dayOfWeek = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]; 
@@ -72,7 +71,8 @@ export class WeatherChartComponent implements OnInit {
     this.cloud_chart = new Chart("cloud_chart", {
       type:'line',
       options:
-      {aspectRatio:1.7,
+      {
+        aspectRatio:this.aspect_ratio,
         scales:
         {
           yPercentageScale:{
@@ -116,6 +116,10 @@ export class WeatherChartComponent implements OnInit {
 
     this.tmp_chart = new Chart("tmp_chart", {
       type: 'line', //this denotes tha type of chart
+      plugins: [{
+        id:"",
+        afterLayout: (chart)=>{this.afterLayout(chart)}
+      }],
       data: {// values on X-Axis
         labels: lables,  
         datasets: [
@@ -131,7 +135,17 @@ export class WeatherChartComponent implements OnInit {
                 return;
               }
               return getGradient(ctx, chartArea);
-            }
+            },
+            backgroundColor:function(context:any) {
+              const chart = context.chart;
+              const {ctx, chartArea} = chart;
+              if (!chartArea) {
+                // This case happens on initial chart load
+                return;
+              }
+              return getGradient(ctx, chartArea);
+            },
+            fill: false
           },
           { 
             type:'bar',
@@ -177,9 +191,47 @@ export class WeatherChartComponent implements OnInit {
               align:'center'
             }
           },
+        },
+      }
+    });
+  }
+  afterLayout(chart:Chart) {
+    return
+    let ctx = chart.ctx;
+    ctx.save();
+    let xAxis = chart.scales['x'];
+    let gradient = ctx.createLinearGradient(xAxis.left, 0, xAxis.right, 0);
+    let data = chart.data.datasets[0].data;
+    let color="";
+    data.forEach((v, i) => {
+      console.log("index: " + i)
+      let x = xAxis.getPixelForTick(i) - xAxis.left;
+      console.log("px: " + x)
+      let offset = 1 / (xAxis.right - xAxis.left) * x;
+      if (offset<0) {
+        return;
+      }
+      if (color) {
+        if (this.weatherdata){
+          if (this.weatherdata[i].Weather.Clouds>50){
+            gradient.addColorStop(offset, 'grey');
+          }else{
+            gradient.addColorStop(offset, 'yellow');
+          }
         }
       }
-    });  
+      if (i < data.length) {
+        if (this.weatherdata){
+          if (this.weatherdata[i].Weather.Clouds>50){
+            gradient.addColorStop(offset, 'grey');
+          }else{
+            gradient.addColorStop(offset, 'yellow');
+          }
+        }
+      }
+    });
+    chart.data.datasets[0].backgroundColor = gradient;
+    ctx.restore();
   }
 }
 

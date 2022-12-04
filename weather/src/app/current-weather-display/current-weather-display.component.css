@@ -1,0 +1,38 @@
+.temperature{
+    font-size: 50px;
+    position: absolute;
+    bottom: 1cm;
+    width: inherit;
+    text-align: center;
+    text-align: center;
+} 
+.border{
+    border: grey;
+    border-radius: 5px;
+    border-style: groove;
+    width: 10cm;
+    height: 10cm;
+    background-color: lightblue;
+    position: relative;
+}
+.weather-text{
+    color: darkslategrey;
+    position: absolute;
+    top: 0.1cm;
+    left: 0.2cm;
+}
+.weather-icon{
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    top:0cm;
+    left: 0cm;
+}
+.time{
+    color: black;
+    position: absolute;
+    top: 1cm;
+    font-size: 30px;
+    text-align: center;
+    width: inherit;
+}

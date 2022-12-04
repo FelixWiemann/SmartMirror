@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from "../config"
 import { WeatherData, WeatherForecast, WeatherProvider } from './weather-provider';
+import { map } from 'rxjs';
 
 @Injectable()
 export class OpenWeatherMap implements WeatherProvider {
@@ -36,7 +37,14 @@ export class OpenWeatherMap implements WeatherProvider {
     }
 
     async getCurrentWeather(): Promise<WeatherForecast> {
-        throw new Error('Method not implemented.');
+        return new Promise((resolve, reject)=>{
+            let forecast:WeatherForecast=new WeatherForecast
+            let data = this.http.get<any>(this.currentWeatherCall)
+            data.forEach(args=> {
+                forecast = this.WeatherForecastFromElement(args)
+                resolve(forecast)
+            })
+        })
     }
 
     private WeatherForecastFromElement(element:any):WeatherForecast{
@@ -51,8 +59,7 @@ export class OpenWeatherMap implements WeatherProvider {
         }
         if (element.snow!=undefined){
             forecast.Weather.Precipitation.Rain=element.snow["3h"];
-        }
-        
+        }        
         forecast.Weather.Pressure.Pressure=element.main.pressure
         forecast.Weather.Pressure.PressureSeaLevel=element.main.sea_level
         forecast.Weather.Pressure.PressureGroundLevel=element.main.grnd_level
@@ -63,6 +70,46 @@ export class OpenWeatherMap implements WeatherProvider {
         forecast.Weather.Wind.Direction=element.wind.deg
         forecast.Weather.Wind.Gust=element.wind.gust
         forecast.Weather.Wind.Speed=element.wind.speed
+        forecast.Weather.WeatherIcon=this.mapWeatherIcon(element)
         return forecast
+    }
+
+    private mapWeatherIcon(element:any):string
+    {
+        switch(element.weather[0].icon){
+            case "01d":
+                return "../../assets/weather/animated/day.svg"
+            case "02d":
+                return "../../assets/weather/animated/cloudy-day-1.svg"
+            case "03d":
+                return "../../assets/weather/animated/cloudy-day-3.svg"
+            case "04d":
+                return "../../assets/weather/animated/cloudy.svg"
+            case "09d":
+                return "../../assets/weather/animated/rainy-7.svg"
+            case "10d":
+                return "../../assets/weather/animated/rainy-5.svg"
+            case "11d":
+                return "../../assets/weather/animated/thunder.svg"
+            case "13d":
+                return "../../assets/weather/animated/snowy-6.svg"
+            case "01n":
+                return "../../assets/weather/animated/night.svg"
+            case "02n":
+                return "../../assets/weather/animated/cloudy-night-1.svg"
+            case "03n":
+                return "../../assets/weather/animated/cloudy-night-2.svg"
+            case "04n":
+                return "../../assets/weather/animated/cloudy.svg"
+            case "09n":
+                return "../../assets/weather/animated/rainy-7.svg"
+            case "10n":
+                return "../../assets/weather/animated/rainy-5.svg"
+            case "11n":
+                return "../../assets/weather/animated/thunder.svg"
+            case "13n":
+                return "../../assets/weather/animated/snowy-6.svg"
+        }
+        return "../../assets/weather/unknown.svg"
     }
 }
