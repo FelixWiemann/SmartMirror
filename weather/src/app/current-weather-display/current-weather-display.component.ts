@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { elementAt } from 'rxjs';
 import { WeatherForecast } from '../WeatherProvider/weather-provider';
 import { WeatherChart } from '../WeatherProvider/WeatherChart';
 
@@ -13,14 +14,39 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   currentWeatherImage="../../assets/weather/animated/cloudy-day-1.svg"
   weather_text = ""
   time = ""
-  document_temperature_id = "tmp_value"
-  document_weather_text_id = "weather_Text"
+  temperatureGradients:Gradient[]=[]
+  cloudGradients:Gradient[]=[]
+  /**
+   * element for temperature value
+   */
+  @ViewChild("tmp_value") temp_element?:ElementRef
+  /**
+   * element for text description
+   */
+  @ViewChild("weather_element") weather_element?:ElementRef
+  /**
+   * element for background
+   */
+  @ViewChild("background") background_element?:ElementRef
 
   ngOnInit(): void {
     this.updateData()
     this.updateTime()
     setInterval(()=>this.updateTime(),1000)
     setInterval(()=>this.updateData(),1000*60*this.timer)
+    this.cloudGradients.push(new Gradient(0,50,"#1499ed","#2684ba"))
+    this.cloudGradients.push(new Gradient(50,70,"#2684ba","#377293"))
+    this.cloudGradients.push(new Gradient(70,100,"#377293","#445b66"))
+    // upper bounds
+    this.temperatureGradients.push(new Gradient(100,3000,"#ff0ef0","#ff0ef0"))
+    this.temperatureGradients.push(new Gradient(30,100,"#ff0050","#ff0ef0"))
+    this.temperatureGradients.push(new Gradient(20,30,"#fdff00","#ff0050"))
+    this.temperatureGradients.push(new Gradient(10,20,"#17ff00","#fdff00"))
+    this.temperatureGradients.push(new Gradient(0,10,"#00ffa8","#17ff00"))
+    this.temperatureGradients.push(new Gradient(-5,0,"#0094ff","#00ffa8"))
+    this.temperatureGradients.push(new Gradient(-10,-5,"#0012ff","#0094ff"))
+    // lower value
+    this.temperatureGradients.push(new Gradient(-1000,-10,"#0094ff","#0012ff"))
   }
 
   private updateData():void{
@@ -35,62 +61,68 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
     this.currentWeatherImage = forecast.Weather.WeatherIcon
     this.weather_text = forecast.Weather.Description
     console.log("updated current weather data")
-    let temp = document.getElementById(this.document_temperature_id)
-    if (temp!=null) {
-      temp.style.color=this.getColorForTemperature(this.temperature)
+    if (this.temp_element!=null) {
+      this.temp_element.nativeElement.style.color=this.getColorForValue(this.temperatureGradients, this.temperature)
+    }
+    if(this.background_element!=null){
+      this.background_element.nativeElement.style.backgroundColor=this.getColorForValue(this.cloudGradients,forecast.Weather.Clouds);
     }
   }
 
-  getPercentage(temp:number, min: number, max: number):number{
-    let tmpDiff = max-min
-    let p = (temp-min)/tmpDiff
-    return p
-  }
-
-  getColorForTemperature(temp: number):string{
-    // red(50) -> green(10)
-    if (temp>10) return this.getGradientColor('#00ff00', '#ff0000',this.getPercentage(temp, 10,50))
-    // green(10) -> blue(-10)
-    return this.getGradientColor('#0000ff', '#00ff00',this.getPercentage(temp, -10,10))
+  getColorForValue(gradients:Gradient[], val:number):string{
+    for (let element of gradients){
+      if (element.start<=val&&element.end>=val) return element.getGradientColor(val)
+    }
+    // return black default
+    return '#000000';
   }
 
   private updateTime():void{
       let date = new Date()
       this.time = date.getHours().toString().padStart(2,"0")+ ":"+ date.getMinutes().toString().padStart(2,"0") +":"+ date.getSeconds().toString().padStart(2,"0")
   }
+  
+}
 
+export class Gradient {
+  constructor(public start:number, public end:number, public start_color:string, public end_color:string){}
+
+  getPercentage(value:number):number{
+    let tmpDiff = this.end-this.start
+    let p = (value-this.start)/tmpDiff
+    return p
+  }
   /**
    * color gradient based on https://stackoverflow.com/questions/3080421/javascript-color-gradient
    * 
-   * @param start_color start color
-   * @param end_color 
-   * @param percent of the way between start and end color (0=> start, 1=>end, 0.5 halfway inbetween)
+   * @param value of the way between start and end color (0=> start, 1=>end, 0.5 halfway inbetween)
    * @returns mixed color
    */
-  getGradientColor = function(start_color:string, end_color:string, percent:number) {
-    if (percent>=1) return end_color;
-    if (percent<=0) return start_color;
+   getGradientColor(value:number) {
+    let percent=this.getPercentage(value)
+    if (percent>=1) return this.end_color;
+    if (percent<=0) return this.start_color;
     // strip the leading # if it's there
-    start_color = start_color.replace(/^\s*#|\s*$/g, '');
-    end_color = end_color.replace(/^\s*#|\s*$/g, '');
+    this.start_color = this.start_color.replace(/^\s*#|\s*$/g, '');
+    this.end_color = this.end_color.replace(/^\s*#|\s*$/g, '');
  
     // convert 3 char codes --> 6, e.g. `E0F` --> `EE00FF`
-    if(start_color.length == 3){
-      start_color = start_color.replace(/(.)/g, '$1$1');
+    if(this.start_color.length == 3){
+      this.start_color = this.start_color.replace(/(.)/g, '$1$1');
     }
  
-    if(end_color.length == 3){
-      end_color = end_color.replace(/(.)/g, '$1$1');
+    if(this.end_color.length == 3){
+      this.end_color = this.end_color.replace(/(.)/g, '$1$1');
     }
  
     // get colors
-    var start_red = parseInt(start_color.substr(0, 2), 16),
-        start_green = parseInt(start_color.substr(2, 2), 16),
-        start_blue = parseInt(start_color.substr(4, 2), 16);
+    var start_red = parseInt(this.start_color.substr(0, 2), 16),
+        start_green = parseInt(this.start_color.substr(2, 2), 16),
+        start_blue = parseInt(this.start_color.substr(4, 2), 16);
  
-    var end_red = parseInt(end_color.substr(0, 2), 16),
-        end_green = parseInt(end_color.substr(2, 2), 16),
-        end_blue = parseInt(end_color.substr(4, 2), 16);
+    var end_red = parseInt(this.end_color.substr(0, 2), 16),
+        end_green = parseInt(this.end_color.substr(2, 2), 16),
+        end_blue = parseInt(this.end_color.substr(4, 2), 16);
  
     // calculate new color
     var diff_red = end_red - start_red;
