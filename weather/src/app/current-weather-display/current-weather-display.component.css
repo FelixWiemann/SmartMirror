@@ -1,19 +1,17 @@
 .temperature{
-    font-size: 55px;
+    font-size: 50px;
     position: absolute;
-    bottom: 0.7cm;
+    bottom: 0.2cm;
     text-align: center;
     left: 100px;
     right: 100px;
     font-weight: bold;
     padding-bottom: 0.1cm;
     padding-top: 0.1cm;
-    box-shadow: 0px 0px 10px 10px rgba(80,80,80, 1) ;
-    background-color:rgb(80, 80, 80);
 } 
 .border{
     border: grey;
-    border-radius: 5px;
+    border-radius: 10px;
     border-style: groove;
     width: 10cm;
     height: 10cm;

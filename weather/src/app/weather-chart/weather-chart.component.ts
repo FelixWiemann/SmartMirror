@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import Chart, { ChartArea } from 'chart.js/auto';
 import { __extends } from 'tslib';
 import { WeatherForecast } from '../WeatherProvider/weather-provider';
@@ -67,7 +67,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
     let lables:string[]=[];
     if (this.weatherdata==undefined) return;
     this.weatherdata.forEach((cast)=>{lables.push(this.getLabel(cast))})
-
+    let parent = this;
     this.cloud_chart = new Chart("cloud_chart", {
       type:'line',
       options:
@@ -116,10 +116,6 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
 
     this.tmp_chart = new Chart("tmp_chart", {
       type: 'line', //this denotes tha type of chart
-      plugins: [{
-        id:"",
-        afterLayout: (chart)=>{this.afterLayout(chart)}
-      }],
       data: {// values on X-Axis
         labels: lables,  
         datasets: [
@@ -134,7 +130,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
                 // This case happens on initial chart load
                 return;
               }
-              return getGradient(ctx, chartArea);
+              return parent.getGradient(ctx, chart,'yTemperatureScale');
             },
             backgroundColor:function(context:any) {
               const chart = context.chart;
@@ -143,7 +139,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
                 // This case happens on initial chart load
                 return;
               }
-              return getGradient(ctx, chartArea);
+              return parent.getGradient(ctx, chart,'yTemperatureScale');
             },
             fill: false
           },
@@ -195,60 +191,44 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
       }
     });
   }
-  afterLayout(chart:Chart) {
-    return
-    let ctx = chart.ctx;
-    ctx.save();
-    let xAxis = chart.scales['x'];
-    let gradient = ctx.createLinearGradient(xAxis.left, 0, xAxis.right, 0);
-    let data = chart.data.datasets[0].data;
-    let color="";
-    data.forEach((v, i) => {
-      console.log("index: " + i)
-      let x = xAxis.getPixelForTick(i) - xAxis.left;
-      console.log("px: " + x)
-      let offset = 1 / (xAxis.right - xAxis.left) * x;
-      if (offset<0) {
-        return;
-      }
-      if (color) {
-        if (this.weatherdata){
-          if (this.weatherdata[i].Weather.Clouds>50){
-            gradient.addColorStop(offset, 'grey');
-          }else{
-            gradient.addColorStop(offset, 'yellow');
-          }
-        }
-      }
-      if (i < data.length) {
-        if (this.weatherdata){
-          if (this.weatherdata[i].Weather.Clouds>50){
-            gradient.addColorStop(offset, 'grey');
-          }else{
-            gradient.addColorStop(offset, 'yellow');
-          }
-        }
-      }
-    });
-    chart.data.datasets[0].backgroundColor = gradient;
-    ctx.restore();
+
+  gradient?:CanvasGradient
+  width=0
+  height=0
+
+  getGradient(ctx:CanvasRenderingContext2D, chart:Chart, scale:string):CanvasGradient {
+    
+    let chartArea = chart.chartArea
+    const chartWidth = chartArea.right - chartArea.left;
+    const chartHeight = chartArea.bottom - chartArea.top;
+
+    if (!this.gradient || this.width !== chartWidth || this.height !== chartHeight) {
+      // Create the gradient because this is either the first render
+      // or the size of the chart has changed
+      this.width = chartWidth;
+      this.height = chartHeight;
+      // gradient from chart -20 -> 50
+      this.gradient = ctx.createLinearGradient(0, chart.scales[scale].getPixelForValue(-20), 0, chart.scales[scale].getPixelForValue(50));
+      this.gradient.addColorStop(this.getPercent(50), 'rgb(200,0,200)');   // >50
+      this.gradient.addColorStop(this.getPercent(35), 'rgb(200,10,50)');   // >40
+      this.gradient.addColorStop(this.getPercent(30), 'rgb(255,30,0)');    // >30
+      this.gradient.addColorStop(this.getPercent(25), 'rgb(230,70,0)');    // >25
+      this.gradient.addColorStop(this.getPercent(20), 'rgb(200,100,0)');   // >20
+      this.gradient.addColorStop(this.getPercent(15), 'rgb(120,150,0)');   // >15
+      this.gradient.addColorStop(this.getPercent(10), 'rgb(70,255,0)');    // >10
+      this.gradient.addColorStop(this.getPercent(5), 'rgb(10,200,10)');    // >5
+      this.gradient.addColorStop(this.getPercent(0), 'rgb(40,100,250)');   // >0
+      this.gradient.addColorStop(this.getPercent(-5), 'rgb(10,80,200)');   // >-5
+      this.gradient.addColorStop(this.getPercent(-10), 'rgb(0,10,255)');   // >-10
+      this.gradient.addColorStop(this.getPercent(-20), 'rgb(0,0,0)');      // >-20
+    }
+
+    return this.gradient;
+  }
+
+  getPercent(degree:number):number{
+    let perDegree = 1/70
+    return perDegree*(degree+20);
   }
 }
 
-function getGradient(ctx:CanvasRenderingContext2D, chartArea:ChartArea):CanvasGradient {
-  let width, height, gradient;
-  const chartWidth = chartArea.right - chartArea.left;
-  const chartHeight = chartArea.bottom - chartArea.top;
-  if (!gradient || width !== chartWidth || height !== chartHeight) {
-    // Create the gradient because this is either the first render
-    // or the size of the chart has changed
-    width = chartWidth;
-    height = chartHeight;
-    gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-    gradient.addColorStop(1, 'rgb(255,0,0)');
-    gradient.addColorStop(0.5, 'rgb(0,255,0)');
-    gradient.addColorStop(0, 'rgb(0,0,255)');
-  }
-
-  return gradient;
-}

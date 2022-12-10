@@ -23,12 +23,12 @@ export class AppComponent {
   constructor(private http:HttpClient){
     Config.create()
     this.weather_provider = new OpenWeatherMap(http)
-    // this.getDummyProvider()
+    //this.weather_provider = this.getDummyProvider()
     // this.generateDummyProviders()
   }
 
   getDummyProvider(){
-    this.weather_provider=new DummyProvider();
+    return new DummyProvider();
   }
 
   generateDummyProviders(){

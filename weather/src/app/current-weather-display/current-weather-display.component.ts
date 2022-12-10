@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { elementAt } from 'rxjs';
 import { WeatherForecast } from '../WeatherProvider/weather-provider';
 import { WeatherChart } from '../WeatherProvider/WeatherChart';
 
@@ -66,6 +65,7 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
     }
     if(this.background_element!=null){
       this.background_element.nativeElement.style.backgroundColor=this.getColorForValue(this.cloudGradients,forecast.Weather.Clouds);
+      this.background_element.nativeElement.style.border=this.getColorForValue(this.cloudGradients,forecast.Weather.Clouds);      
     }
   }
 

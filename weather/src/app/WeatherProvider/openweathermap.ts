@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from "../config"
-import { WeatherData, WeatherForecast, WeatherProvider } from './weather-provider';
-import { map } from 'rxjs';
+import { WeatherForecast, WeatherProvider } from './weather-provider';
+
 
 @Injectable()
 export class OpenWeatherMap implements WeatherProvider {
