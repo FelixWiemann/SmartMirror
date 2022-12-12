@@ -31,7 +31,7 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   ngOnInit(): void {
     this.updateData()
     this.updateTime()
-    setInterval(()=>this.updateTime(),1000)
+    setInterval(()=>this.updateTime(),1000*10) // update time every 10 s
     setInterval(()=>this.updateData(),1000*60*this.timer)
     this.cloudGradients.push(new Gradient(0,50,"#1499ed","#2684ba"))
     this.cloudGradients.push(new Gradient(50,70,"#2684ba","#377293"))

@@ -11,7 +11,7 @@ export class OpenWeatherMap implements WeatherProvider {
     lat:string;
     currentWeatherCall:string
     foreCastCall:string
-
+    imagesource="../../assets/weather/static/"
 
     constructor(private http:HttpClient){
       this.api_key=Config.weather.api_key;
@@ -78,37 +78,37 @@ export class OpenWeatherMap implements WeatherProvider {
     {
         switch(element.weather[0].icon){
             case "01d":
-                return "../../assets/weather/animated/day.svg"
+                return `${this.imagesource}day.svg`
             case "02d":
-                return "../../assets/weather/animated/cloudy-day-1.svg"
+                return `${this.imagesource}cloudy-day-1.svg`
             case "03d":
-                return "../../assets/weather/animated/cloudy-day-3.svg"
+                return `${this.imagesource}cloudy-day-3.svg`
             case "04d":
-                return "../../assets/weather/animated/cloudy.svg"
+                return `${this.imagesource}cloudy.svg`
             case "09d":
-                return "../../assets/weather/animated/rainy-7.svg"
+                return `${this.imagesource}rainy-7.svg`
             case "10d":
-                return "../../assets/weather/animated/rainy-5.svg"
+                return `${this.imagesource}rainy-5.svg`
             case "11d":
-                return "../../assets/weather/animated/thunder.svg"
+                return `${this.imagesource}thunder.svg`
             case "13d":
-                return "../../assets/weather/animated/snowy-6.svg"
+                return `${this.imagesource}snowy-6.svg`
             case "01n":
-                return "../../assets/weather/animated/night.svg"
+                return `${this.imagesource}night.svg`
             case "02n":
-                return "../../assets/weather/animated/cloudy-night-1.svg"
+                return `${this.imagesource}cloudy-night-1.svg`
             case "03n":
-                return "../../assets/weather/animated/cloudy-night-2.svg"
+                return `${this.imagesource}cloudy-night-2.svg`
             case "04n":
-                return "../../assets/weather/animated/cloudy.svg"
+                return `${this.imagesource}cloudy.svg`
             case "09n":
-                return "../../assets/weather/animated/rainy-7.svg"
+                return `${this.imagesource}rainy-7.svg`
             case "10n":
-                return "../../assets/weather/animated/rainy-5.svg"
+                return `${this.imagesource}rainy-5.svg`
             case "11n":
-                return "../../assets/weather/animated/thunder.svg"
+                return `${this.imagesource}thunder.svg`
             case "13n":
-                return "../../assets/weather/animated/snowy-6.svg"
+                return `${this.imagesource}snowy-6.svg`
         }
         return "../../assets/weather/unknown.svg"
     }
