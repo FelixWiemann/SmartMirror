@@ -10,7 +10,7 @@ import { WeatherChart } from '../WeatherProvider/WeatherChart';
 export class CurrentWeatherDisplayComponent extends WeatherChart implements OnInit {
 
   temperature = 0
-  currentWeatherImage="../../assets/weather/animated/cloudy-day-1.svg"
+  currentWeatherImage="../../assets/weather/static/cloudy-day-1.svg"
   weather_text = ""
   time = ""
   temperatureGradients:Gradient[]=[]
@@ -29,10 +29,7 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   @ViewChild("background") background_element?:ElementRef
 
   ngOnInit(): void {
-    this.updateData()
-    this.updateTime()
-    setInterval(()=>this.updateTime(),1000*10) // update time every 10 s
-    setInterval(()=>this.updateData(),1000*60*this.timer)
+
     this.cloudGradients.push(new Gradient(0,50,"#1499ed","#2684ba"))
     this.cloudGradients.push(new Gradient(50,70,"#2684ba","#377293"))
     this.cloudGradients.push(new Gradient(70,100,"#377293","#445b66"))
@@ -46,6 +43,11 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
     this.temperatureGradients.push(new Gradient(-10,-5,"#0012ff","#0094ff"))
     // lower value
     this.temperatureGradients.push(new Gradient(-1000,-10,"#0094ff","#0012ff"))
+
+    this.updateData()
+    this.updateTime()
+    setInterval(()=>this.updateTime(),1000*1) // update time every 1 s
+    setInterval(()=>this.updateData(),1000*60*this.timer)
   }
 
   private updateData():void{
