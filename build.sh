@@ -13,7 +13,7 @@ pushd ./weather
 ng build 
 popd
 rm ./mirror.tgz
-tar -zcvf mirror.tgz ./weather/dist
+tar -zcvf mirror.tgz -C ./weather/dist/weather .
 echo "copy build to" $target
 scp ./mirror.tgz $target:~/mirror.tgz
 echo "installing build remotely" $target
