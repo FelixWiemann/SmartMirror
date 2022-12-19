@@ -1,17 +1,15 @@
-<body>
-    <div class="parent">
-        <div class ="chart_container">
-            <app-line-chart id="weatherchart" [WeatherProvider]="weather_provider" [UpdateInterval]="10"></app-line-chart>
-        </div>
-        <div class ="current_weather_container">
-            <app-current-weather-display [WeatherProvider]="weather_provider" [UpdateInterval]="10"></app-current-weather-display>
-        </div>
-        <!--<table>
-            <ng-container *ngFor="let providers of this.testprovider">
-                <tr><td *ngFor="let provider of providers"><app-current-weather-display [WeatherProvider]="provider" [UpdateInterval]="10"></app-current-weather-display></td></tr>
-            </ng-container>
-        </table>-->
+<body class="parent" #parent>
+    <div class ="chart_container">
+        <app-line-chart id="weatherchart" [WeatherProvider]="weather_provider" [UpdateInterval]="10"></app-line-chart>
     </div>
+    <div class ="current_weather_container">
+        <app-current-weather-display [WeatherProvider]="weather_provider" [UpdateInterval]="10"></app-current-weather-display>
+    </div>
+    <!--<table>
+        <ng-container *ngFor="let providers of this.testprovider">
+            <tr><td *ngFor="let provider of providers"><app-current-weather-display [WeatherProvider]="provider" [UpdateInterval]="10"></app-current-weather-display></td></tr>
+        </ng-container>
+    </table>-->
 </body>
 
  

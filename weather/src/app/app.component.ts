@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { OpenWeatherMap } from "./WeatherProvider/openweathermap"
 import { HttpClient } from '@angular/common/http';
 import { Config } from './config';
@@ -19,6 +19,7 @@ export class AppComponent {
   title = 'weather test';
   weather_provider:WeatherProvider
   testprovider:CurrentWeatherTestProvider[][]=[]
+  @ViewChild("parent") parent?:ElementRef
 
   constructor(private http:HttpClient){
     Config.create()
@@ -29,6 +30,14 @@ export class AppComponent {
 
   getDummyProvider(){
     return new DummyProvider();
+  }
+
+  ngAfterViewInit (): void {
+    // set size to screen
+    if (this.parent){
+      this.parent.nativeElement.style.width=screen.width+"px"
+      this.parent.nativeElement.style.height=screen.height+"px"
+    }
   }
 
   generateDummyProviders(){
