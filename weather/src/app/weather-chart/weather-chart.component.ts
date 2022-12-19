@@ -19,11 +19,15 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
   interval?:NodeJS.Timer;
   aspect_ratio=1.7
 
+  currentLabel=""
   private getLabel(item:WeatherForecast):string{
     var dayOfWeek = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]; 
     let label = ""
     let date = new Date(item.TimeStamp)
     label=dayOfWeek[date.getDay()];
+    // only display new label at the start of every day
+    if (this.currentLabel===label) return "";
+    this.currentLabel=label
     return label
   }
 
@@ -59,6 +63,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
     this.tmp_chart.data.datasets[2].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Snow+cast.Weather.Precipitation.Rain)
     this.cloud_chart.update()
     this.tmp_chart.update()
+    this.currentLabel = ""
     console.log("updated weather charts")
   }
 
