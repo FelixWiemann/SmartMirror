@@ -58,7 +58,7 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   }
 
   updateScreen(forecast:WeatherForecast){
-    this.temperature = forecast.Weather.Temperature.Temperature
+    this.temperature = Math.round(forecast.Weather.Temperature.Temperature)
     this.currentWeatherImage = forecast.Weather.WeatherIcon
     this.weather_text = forecast.Weather.Description
     console.log("updated current weather data")
