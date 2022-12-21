@@ -1,8 +1,11 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import Chart, { ChartArea } from 'chart.js/auto';
+import { Component, OnInit } from '@angular/core';
+import Chart, {Plugin} from 'chart.js/auto';
 import { __extends } from 'tslib';
 import { WeatherForecast } from '../WeatherProvider/weather-provider';
 import { WeatherChart } from '../WeatherProvider/WeatherChart';
+import { plugins } from 'chart.js';
+import { Gradient, GradientUtils } from '../WeatherProvider/ColorGradient';
+import { ct, E } from 'chart.js/dist/chunks/helpers.core';
 
 
 @Component({
@@ -19,7 +22,17 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
   interval?:NodeJS.Timer;
   aspect_ratio=1.7
 
+  backgroundGradient:Gradient[]=[]
+
   currentLabel=""
+
+  constructor(){
+    super()
+    this.backgroundGradient.push(new Gradient(50,100,"#111140","#111111"))
+    this.backgroundGradient.push(new Gradient(0,50,"#0020ff","#111140"))
+
+  }
+
   private getLabel(item:WeatherForecast):string{
     var dayOfWeek = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]; 
     let label = ""
@@ -32,6 +45,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
   }
 
   private iniChart(){
+    Chart.register(this.DayPlugIn)
     console.log("creating chart")
     this.provider?.getForeCast().then((data)=>{
       this.weatherdata = data; 
@@ -125,7 +139,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
         labels: lables,  
         datasets: [
           {
-            label: 'Temperature [°C]',
+            label:"",
             data:[],
             yAxisID:'yTemperatureScale',
             borderColor: function(context:any) {
@@ -137,15 +151,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
               }
               return parent.getGradient(ctx, chart,'yTemperatureScale');
             },
-            backgroundColor:function(context:any) {
-              const chart = context.chart;
-              const {ctx, chartArea} = chart;
-              if (!chartArea) {
-                // This case happens on initial chart load
-                return;
-              }
-              return parent.getGradient(ctx, chart,'yTemperatureScale');
-            },
+            backgroundColor:'rgb(255,255,255)',
             fill: false
           },
           { 
@@ -166,13 +172,14 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
           }
         ],
       },
-      options: {
+      options:{
         aspectRatio:1.7,
         datasets:{
           line:{
             tension:0.5
-          }
+          },
         },
+        
         scales:{
           yTemperatureScale:{
             type: 'linear',
@@ -192,9 +199,52 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
               align:'center'
             }
           },
-        },
-      }
+        }
+      },
+      plugins:[this.DayPlugIn]
     });
+  }
+
+  DayPlugIn:Plugin = {
+    id: 'DayPlugIn',
+    beforeDraw: (chart, args, options) => {
+      const {ctx} = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-over';
+      let startDay=0
+      let endDay=0
+      let min = chart.scales['yTemperatureScale'].getPixelForValue(chart.scales['yTemperatureScale'].min) 
+      let max = chart.scales['yTemperatureScale'].getPixelForValue(chart.scales['yTemperatureScale'].max) 
+      let avclouds= 0
+      let dataCount =0 
+      let lastTickIndex=0
+      chart.scales['x'].getTicks().forEach((tick, index, ticks)=>{
+        if (this.weatherdata){
+          avclouds=avclouds+this.weatherdata[index].Weather.Clouds
+          dataCount++
+        }
+        if (tick.label!=""){
+          endDay=index
+          this.doGradient(ctx, chart,avclouds/dataCount, startDay, endDay, min, max)
+          avclouds=0
+          dataCount=0
+          startDay=index
+        }
+        lastTickIndex=index
+      })
+      endDay=lastTickIndex
+      this.doGradient(ctx, chart, avclouds/dataCount, startDay, endDay, min, max)
+      ctx.restore();
+    }
+  };
+
+  doGradient(ctx:CanvasRenderingContext2D, chart:Chart, avclouds:number, startDay:number, endDay:number, min: number, max: number){
+    let pxStartDay=chart.scales['x'].getPixelForTick(startDay)
+    let pxEndDay=chart.scales['x'].getPixelForTick(endDay)
+    ctx.fillStyle = GradientUtils.getColorForValue(this.backgroundGradient,avclouds);
+    ctx.fillRect(pxStartDay-2, max, pxEndDay-pxStartDay-2, min-max);
+    // ctx.fillStyle = '#ffffff'
+    // ctx.fillRect(pxEndDay-2, max, 2, min-max);
   }
 
   gradient?:CanvasGradient
