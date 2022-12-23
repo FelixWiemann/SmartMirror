@@ -158,7 +158,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
           },
           { 
             type:'bar',
-            label: 'Snow [ml]',
+            label: '',
             data:[],
             yAxisID:'yPrecipitationAmount',
             backgroundColor: 'rgba(173,216,250, .5)',
@@ -166,7 +166,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
           },
           {
             type:'bar',
-            label: 'Rain [ml]',
+            label: '',
             data:[],
             yAxisID:'yPrecipitationAmount',
             backgroundColor: 'rgba(73,116,230, .5)',
@@ -181,7 +181,6 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
             tension:0.5
           },
         },
-        
         scales:{
           yTemperatureScale:{
             type: 'linear',
@@ -201,10 +200,12 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
               align:'center'
             }
           },
-        }
+        },
       },
       plugins:[this.DayPlugIn]
     });
+    // todo check correct option instead of modify default
+    Chart.defaults.plugins.legend.display=false
   }
 
   DayPlugIn:Plugin = {
