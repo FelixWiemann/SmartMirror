@@ -1,7 +1,11 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-
+# config of mirror contains api token, do not add
 config.json
+# builds before being pushed to the mirror
+core.tgz
+mirror.tgz
+
 
 
 # Compiled output
