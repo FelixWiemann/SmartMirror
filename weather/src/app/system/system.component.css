@@ -1,0 +1,13 @@
+.parent{
+    position: absolute;
+    bottom: 5px;
+    background-color: aqua;
+    width: auto;
+    min-width: 170px;
+}
+.label{
+    float:left;
+}
+.data{
+    float:right;
+}
