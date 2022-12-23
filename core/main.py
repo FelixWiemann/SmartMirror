@@ -4,6 +4,7 @@ import time
 import json
 import psutil
 import socket
+import os
 
 hostName = "localhost"
 serverPort = 12345
@@ -55,9 +56,10 @@ class SystemApiEndPoint(ApiEndPoint):
         self.Calls["ip"]=self.ip
     
     def getTemp(self):
-        return  {"tmp":12}
-        # todo based on running system
-        # return {"tmp": round(int(open("/sys/class/thermal/thermal_zone0/temp", "r").readlines()[0])/1000)}
+        print (os.name)
+        if os.name == "nt":
+            return  {"tmp":"not implemented on windows"}
+        return {"tmp": round(int(open("/sys/class/thermal/thermal_zone0/temp", "r").readlines()[0])/1000)}
 
     def getRamUsage(self):
         return {"ram_usage": psutil.virtual_memory().percent}
