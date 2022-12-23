@@ -47,15 +47,17 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
   private iniChart(){
     Chart.register(this.DayPlugIn)
     console.log("creating chart")
-    this.provider?.getForeCast().then((data)=>{
-      this.weatherdata = data; 
-      this.createChart(); 
-      this.updateChart();
-      this.interval = setInterval(()=>
-      {
-        this.provider?.getForeCast().then((data)=>{this.updateChart()})
-      },1000*60*this.timer)
-    })
+    setTimeout(()=>{
+      this.provider?.getForeCast().then((data)=>{
+        this.weatherdata = data; 
+        this.createChart(); 
+        this.updateChart();
+        this.interval = setInterval(()=>
+        {
+          this.provider?.getForeCast().then((data)=>{this.updateChart()})
+        },1000*60*this.timer)
+      })
+    },1000*10)
   }
 
   async ngOnInit(): Promise<void> {
