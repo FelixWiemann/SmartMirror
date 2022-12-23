@@ -14,7 +14,25 @@ ng build
 popd
 rm ./mirror.tgz
 tar -zcvf mirror.tgz -C ./weather/dist/weather .
+pushd ./core
+python -m pip freeze > requirements.txt
+popd
+tar -zcvf core.tgz -C ./core .
 echo "copy build to" $target
 scp ./mirror.tgz $target:~/mirror.tgz
+scp ./core.tgz $target:~/core.tgz
 echo "installing build remotely" $target
-ssh -t $target 'echo "deleting old build"; sudo rm -rf /var/www/html/; sudo mkdir /var/www/html;echo "unpacking" ;sudo tar -zxvf ~/mirror.tgz -C /var/www/html;echo "rebooting in 10..."; sleep 10; sudo reboot'
+ssh -t $target 'echo "deleting old build";
+ sudo rm -rf /var/www/html/; 
+ sudo mkdir /var/www/html;
+ sudo rm -rf /var/mirror/; 
+ sudo mkdir /var/mirror;
+ echo "unpacking" ;
+ sudo tar -zxvf ~/mirror.tgz -C /var/www/html;
+ sudo tar -zxvf ~/core.tgz -C /var/mirror;
+ cd /var/mirror;
+ echo "installing requirements" ;
+ # sudo python3 -m pip install -r requirements.txt;
+ echo "rebooting in 10..."; 
+ sleep 10; 
+ sudo reboot'
