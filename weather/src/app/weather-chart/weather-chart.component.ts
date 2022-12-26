@@ -3,9 +3,7 @@ import Chart, {Plugin} from 'chart.js/auto';
 import { __extends } from 'tslib';
 import { WeatherForecast } from '../WeatherProvider/weather-provider';
 import { WeatherChart } from '../WeatherProvider/WeatherChart';
-import { plugins } from 'chart.js';
 import { Gradient, GradientUtils } from '../WeatherProvider/ColorGradient';
-import { ct, E } from 'chart.js/dist/chunks/helpers.core';
 
 
 @Component({
@@ -62,18 +60,19 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.iniChart();
-  }
+  }  
+
 
   private updateChart(){
-    let lables:string[]=[];
+    this.labels = [];
     if (this.weatherdata==undefined) return;
-    this.weatherdata.forEach((cast)=>{lables.push(this.getLabel(cast))})
+    this.weatherdata.forEach((cast)=>{this.labels.push(this.getLabel(cast))})
     if (this.cloud_chart==undefined) return;
     if (this.tmp_chart==undefined) return;
-    this.cloud_chart.data.labels=lables
+    this.cloud_chart.data.labels=this.labels
     this.cloud_chart.data.datasets[0].data=this.weatherdata.map((cast)=>cast.Weather.Clouds)
     this.cloud_chart.data.datasets[1].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Probability)
-    this.tmp_chart.data.labels=lables
+    this.tmp_chart.data.labels=this.labels
     this.tmp_chart.data.datasets[0].data=this.weatherdata.map((cast)=>cast.Weather.Temperature.Temperature)
     this.tmp_chart.data.datasets[1].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Snow)
     this.tmp_chart.data.datasets[2].data=this.weatherdata.map((cast)=>cast.Weather.Precipitation.Snow+cast.Weather.Precipitation.Rain)
@@ -83,11 +82,11 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
     console.log("updated weather charts")
   }
 
+  labels:string[]=[];
 
   createChart(){
-    let lables:string[]=[];
     if (this.weatherdata==undefined) return;
-    this.weatherdata.forEach((cast)=>{lables.push(this.getLabel(cast))})
+    this.weatherdata.forEach((cast)=>{this.labels.push(this.getLabel(cast))})
     let parent = this;
     this.cloud_chart = new Chart("cloud_chart", {
       type:'line',
@@ -114,7 +113,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
         },
       },
       data:{// values on X-Axis
-        labels: lables,  
+        labels: this.labels,  
         datasets: [
           {
             label: 'Cloudiness [%]',
@@ -134,11 +133,10 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
         ],
       }
     })
-
     this.tmp_chart = new Chart("tmp_chart", {
       type: 'line', //this denotes tha type of chart
       data: {// values on X-Axis
-        labels: lables,  
+        labels: this.labels,  
         datasets: [
           {
             label:"",
@@ -154,7 +152,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
               return parent.getGradient(ctx, chart,'yTemperatureScale');
             },
             backgroundColor:'rgb(255,255,255)',
-            fill: false
+            fill: false,
           },
           { 
             type:'bar',
@@ -200,6 +198,14 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
               align:'center'
             }
           },
+          x:{
+            ticks:{
+              callback: function(value, index, ticks) {
+                if (this.getLabels()[index]=="" && index % 2 == 0 ) return this.getLabels()[index-1]
+                return this.getLabels()[index];
+              }
+            }
+          }
         },
       },
       plugins:[this.DayPlugIn]
