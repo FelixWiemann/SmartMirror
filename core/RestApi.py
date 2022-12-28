@@ -10,7 +10,7 @@ class ApiEndPoint:
         self.AccessControlAllowOrigin=("Access-Control-Allow-Origin", "*")  
         self.AccessControlAllowHeaders=("Access-Control-Request-Headers", "*")  
         self.AccessControlAllowMethod=("Access-Control-Request-Method", "*")  
-        self.logger = logging.getLogger('REST API')
+        self.logger = logging.getLogger('server.REST_API')
         pass
     
     def resolve(self, path):

@@ -31,7 +31,7 @@ class LogApiEndpoint(PostApiEndpint):
         self.Calls["warn"] = self.warn
         self.Calls["info"] = self.info
         self.Calls["critical"] = self.critical
-        self.angularLog = logging.getLogger('angular')
+        self.angularLog = logging.getLogger('server.angular')
 
     def debug(self, server, data):
         self.angularLog.debug(data)
