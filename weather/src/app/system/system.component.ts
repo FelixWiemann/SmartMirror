@@ -28,7 +28,6 @@ export class SystemComponent implements OnInit {
     let data = this.http.get<any>("http://localhost:12345/system/data")
     data.forEach(
       (args)=>{
-          console.log (args)
           this.temp = args.tmp
           this.ram = args.ram_usage
           this.cpu = args.cpu_usage

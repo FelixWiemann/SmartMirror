@@ -62,7 +62,7 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
     this.temperature = Math.round(forecast.Weather.Temperature.Temperature)
     this.currentWeatherImage = forecast.Weather.WeatherIcon
     this.weather_text = forecast.Weather.Description
-    console.log("updated current weather data")
+    console.debug("updated current weather data")
     if (this.temp_element!=null) {
       this.temp_element.nativeElement.style.color=GradientUtils.getColorForValue(this.temperatureGradients, this.temperature)
     }

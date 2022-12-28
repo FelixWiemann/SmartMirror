@@ -44,7 +44,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
 
   private iniChart(){
     Chart.register(this.DayPlugIn)
-    console.log("creating chart")
+    console.debug("creating weather chart")
     setTimeout(()=>{
       this.provider?.getForeCast().then((data)=>{
         this.weatherdata = data; 
@@ -79,7 +79,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
     this.cloud_chart.update()
     this.tmp_chart.update()
     this.currentLabel = ""
-    console.log("updated weather charts")
+    console.debug("updated weather charts")
   }
 
   labels:string[]=[];
