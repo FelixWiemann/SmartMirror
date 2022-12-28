@@ -37,6 +37,14 @@ class CoreServer(BaseHTTPRequestHandler):
             self.logger.error("error resolving POST %s", str(ex))
             raise ex
 
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Headers", "content-type,")  
+        self.send_header("Access-Control-Allow-Method", "GET,POST,OPTIONS")  
+        self.end_headers()
+
+
 class Server():
     def __init__(self, hostName, serverPort) -> None:
         self.webServer = HTTPServer((hostName, serverPort), CoreServer)

@@ -4,7 +4,6 @@ from SystemApiEndpoint import SystemApiEndPoint
 from RestApi import PostApiEndpint
 import logging
 
-
 class HttpEndPoint(ApiEndPoint):
     def __init__(self) -> None:
         super().__init__()
@@ -15,7 +14,6 @@ class RestApi(ApiEndPoint):
         self.Calls["system"] = SystemApiEndPoint()
         self.Calls["favicon.ico"]=self.favicon
         self.Calls[""] = self.root
-        pass
 
     def root(self, server):
         self.send(server, 200, [self.ContentTypeTextHtml], ["<html><head><title>https://pythonbasics.org</title></head>","<body>","<p>Request: %s</p>" % server.path,"</body></html>"] )

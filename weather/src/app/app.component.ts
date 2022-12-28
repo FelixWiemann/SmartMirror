@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { WeatherProvider } from './WeatherProvider/weather-provider';
 import { DummyProvider } from './WeatherProvider/DummyProvider';
 import { CurrentWeatherTestProvider } from './WeatherProvider/CurrentWeatherTestProvider';
+import { LoggingConsole } from './LoggingConsole';
 
 
 @Component({
@@ -22,11 +23,12 @@ export class AppComponent {
   @ViewChild("parent") parent?:ElementRef
 
   constructor(private http:HttpClient){
-    Config.create()
+    Config.create();
+    (console as unknown as LoggingConsole).setHttpClient(http)
     this.weather_provider = new OpenWeatherMap(http)
     //this.weather_provider = this.getDummyProvider()
     // this.generateDummyProviders()
-  }
+    }
 
   getDummyProvider(){
     return new DummyProvider();
