@@ -2,6 +2,7 @@
 from RestApi import ApiEndPoint
 from SystemApiEndpoint import SystemApiEndPoint
 from RestApi import PostApiEndpint
+import logging
 
 
 class HttpEndPoint(ApiEndPoint):
@@ -27,10 +28,32 @@ class RestApi(ApiEndPoint):
 class LogApiEndpoint(PostApiEndpint):
     def __init__(self) -> None:
         super().__init__()
-        self.Calls["log"] = self.log
+        self.Calls["debug"] = self.debug
+        self.Calls["error"] = self.error
+        self.Calls["warn"] = self.warn
+        self.Calls["info"] = self.info
+        self.Calls["critical"] = self.critical
+        self.angularLog = logging.getLogger('angular')
 
-    def log(self,server, data):
-        print(data)
+    def debug(self, server, data):
+        self.angularLog.debug(data)
+        self.sendOk(server)
+
+    def error(self, server, data):
+        self.angularLog.error(data)
+        self.sendOk(server)
+    
+    def warn(self, server, data):
+        self.angularLog.warn(data)
+        self.sendOk(server)
+
+    def info(self, server, data):
+        self.angularLog.info(data)
+        self.sendOk(server)
+    
+    def critical(self ,server, data):
+        self.angularLog.critical(data)
+        self.sendOk(server)
 
 class PostApi(PostApiEndpint):
     def __init__(self) -> None:

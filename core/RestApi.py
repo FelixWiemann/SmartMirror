@@ -1,4 +1,6 @@
 
+import logging
+
 class ApiEndPoint:
     
     def __init__(self) -> None:
@@ -6,6 +8,7 @@ class ApiEndPoint:
         self.ContentTypeTextHtml=("Content-type", "text/html")
         self.ContentTypeTextJson=("Content-type", "application/json")
         self.AccessControlAllowOrigin=("Access-Control-Allow-Origin", "*")
+        self.logger = logging.getLogger('REST API')
         pass
     
     def resolve(self, path):
@@ -16,8 +19,12 @@ class ApiEndPoint:
             return self.Calls[paths[0].lower()]
         except KeyError as ex:
             return self.notFound
-        
+
+    def sendOk(self, server):
+        self.send(server, 200, [self.ContentTypeTextHtml], [""] )
+    
     def notFound(self, server):
+        self.logger.error("error resolving %s call to %s", str(server.command),str(server.path))
         self.send(server, 404, [self.ContentTypeTextHtml], ["<html><head><title>NOT FOUND</title></head>","<body>","<p>404 NOT FOUND","<p>Request: %s</p>" % server.path,"</body></html>"] )
     
     def send(self, server, code, headers, data):
@@ -30,5 +37,5 @@ class ApiEndPoint:
 
 class PostApiEndpint(ApiEndPoint):
     def notFound(self, server, data):
-        super().notFound(self, server)
+        super().notFound(server)
     
