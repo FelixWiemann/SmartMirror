@@ -7,7 +7,7 @@
   also python will be copied and pushed
   
 ## Software architecture
-:::mermaid
+```mermaid
 graph TD;
     display[angular website]
     python[py server]
@@ -18,4 +18,4 @@ graph TD;
     system <--get sys info-->python
     python<--control system-->display
     display<--retrieve weather-->weather
-:::
+```

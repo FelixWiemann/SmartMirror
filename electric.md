@@ -2,7 +2,7 @@
 
 ## Setup
 
-:::mermaid
+```mermaid
 graph TD;
     Screen[LCD B173RW01 V.1]
     lcdcontroller((lcd controller\n m.nt68676.2))
@@ -22,11 +22,11 @@ graph TD;
     BPI--switching output-->ctrlButtons
     12V-->lcdcontroller
     internet--wifi-->BPI
-:::
+```
 
 ## Wiring
 
-:::mermaid
+```mermaid
 graph TD;
     bpi[BananaPI M2 Zero]
     powerBtn[power Button\n of displaycontrol buttons]
@@ -35,7 +35,7 @@ graph TD;
     bpi --gnd to toggle on/off-->powerBtn
     bpi --> motionsensor
 
-:::
+```
 
 
 
