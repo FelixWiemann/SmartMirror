@@ -2,9 +2,19 @@
 
 # config of mirror contains api token, do not add
 config.json
+
 # builds before being pushed to the mirror
 core.tgz
 mirror.tgz
+
+#test data
+server.log
+server.log.*
+localbuild.sh
+
+
+# pycaches
+*__pycache__*
 
 
 
