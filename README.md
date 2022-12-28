@@ -5,7 +5,7 @@
 - python core for system data + interaction with periphery
 
 ## general overview; hardware setup 
-See [schematics](schematics.md#setup)
+See [schematics](electric.md#setup)
 
 ## Setup
 see [setup](setup.md)
