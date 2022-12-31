@@ -27,6 +27,7 @@ ssh -t $target 'echo "deleting old build";
  sudo mkdir /var/www/html;
  sudo rm -rf /var/mirror/; 
  sudo mkdir /var/mirror;
+ [ ! -d "/var/log/mirror" ] && sudo mkdir /var/log/mirror;
  echo "unpacking" ;
  sudo tar -zxvf ~/mirror.tgz -C /var/www/html;
  sudo tar -zxvf ~/core.tgz -C /var/mirror;
