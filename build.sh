@@ -17,7 +17,9 @@ tar -zcvf mirror.tgz -C ./weather/dist/weather .
 pushd ./core
 python -m pip freeze > requirements.txt
 popd
-tar --exclude='*/__pycache__/*' -zcvf core.tgz -C ./core .
+# exclude cache from develop machine
+# exclude GPIO development implementation for development env 
+tar --exclude='*/__pycache__*' --exclude='*/pyGPIO2*' -zcvf core.tgz -C ./core .
 echo "copy build to" $target
 scp ./mirror.tgz $target:~/mirror.tgz
 scp ./core.tgz $target:~/core.tgz
