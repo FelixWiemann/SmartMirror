@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 
 from ApiEndpoints import PostApi, RestApi
+from utils.BackgroundObject import BackgroundObject
 
 apiEndpoint=RestApi()
 postEndpoint=PostApi()
@@ -45,13 +46,14 @@ class CoreServer(BaseHTTPRequestHandler):
         self.end_headers()
 
 
-class Server():
+class Server(BackgroundObject):
     def __init__(self, hostName, serverPort) -> None:
+        super().__init__(0) #cycle time = 0
         self.webServer = HTTPServer((hostName, serverPort), CoreServer)
         self.logger = logging.getLogger("Server")
-        self.logger.info("Server started http://%s:%s" % (hostName, serverPort))
+        self.logger.info("starting server on http://%s:%s" % (hostName, serverPort))
 
-    def run(self):
+    def work(self):
         try:
             self.webServer.serve_forever()
         except KeyboardInterrupt:
@@ -60,3 +62,7 @@ class Server():
 
         self.webServer.server_close()
         self.logger.info("Server stopped.")
+        
+    def stop(self):
+        self.webServer.shutdown()
+        return super().stop()
