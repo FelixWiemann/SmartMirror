@@ -1,10 +1,13 @@
 import threading
 import time
+import logging
 
 class BackgroundObject():
-    def __init__(self, cycleTime) -> None:
+    def __init__(self, cycleTime, name) -> None:
         self.cycleTime=cycleTime
         self.run = False
+        self.name = name
+        self.logger = logging.getLogger(self.name)
         pass
 
     def start(self):
@@ -20,13 +23,16 @@ class BackgroundObject():
 
     def _worker(self):
         while (self.run):
-            self.work()
+            try:
+                self.work()
+            except Exception as ex:
+                self.logger.error("failed to run worker: %s - terminating", str(ex))
+                self.run=False
             time.sleep(self.cycleTime)
             # detect if parent still active
             if not threading.main_thread().is_alive():
-                print ("parent is dead")
+                self.logger.error("parent is dead, terminating")
                 self.run=False
-        print ("done working")
     
     def work(self):
         pass

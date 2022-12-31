@@ -5,6 +5,7 @@ OUTPUT=1
 PULLDOWN=2
 PULLUP=1
 __doc__=""
+import random
 
 ## init
 # 
@@ -16,7 +17,7 @@ def getcfg(pin):
 
 ## read value of pin
 def input(pin):
-    return 0
+    return random.Random().random()
 
 ## write value to pin
 def output(pin, value):

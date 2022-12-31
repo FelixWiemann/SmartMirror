@@ -48,9 +48,8 @@ class CoreServer(BaseHTTPRequestHandler):
 
 class Server(BackgroundObject):
     def __init__(self, hostName, serverPort) -> None:
-        super().__init__(0) #cycle time = 0
+        super().__init__(0, "server") #cycle time = 0
         self.webServer = HTTPServer((hostName, serverPort), CoreServer)
-        self.logger = logging.getLogger("Server")
         self.logger.info("starting server on http://%s:%s" % (hostName, serverPort))
 
     def work(self):

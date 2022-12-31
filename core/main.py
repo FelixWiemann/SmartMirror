@@ -3,14 +3,18 @@ from server import Server
 import utils.logger
 import time
 import logging
+from pyGPIO2.gpio import gpio
+from gpio.screen import Screen
 
 hostName = "localhost"
 serverPort = 12345
 
 def main():
     utils.logger.initLogger()
+    gpio.init()
     server = Server(hostName, serverPort)
     server.start()
+    screen = Screen()
     try:
         while (True):
             time.sleep(10)
