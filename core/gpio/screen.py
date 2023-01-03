@@ -6,7 +6,7 @@ class Screen():
 
     def __init__(self) -> None:
         self.logger = logging.getLogger("gpio.screen")
-        self.sensor = MotionSensor(10,self.motionChanged, port.GPIO2)
+        self.sensor = MotionSensor(10,self.motionChanged, port.GPIO17)
         self.sensor.start()
 
     def motionChanged(self, newValue):

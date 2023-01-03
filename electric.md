@@ -33,7 +33,7 @@ graph TD;
     motionsensor[Motion sensor]
 
     bpi --gnd to toggle on/off-->powerBtn
-    bpi --> motionsensor
+    bpi --GPIO.17--> motionsensor
 
 ```
 

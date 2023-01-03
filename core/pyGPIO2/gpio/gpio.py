@@ -6,6 +6,9 @@ PULLDOWN=2
 PULLUP=1
 __doc__=""
 import random
+from pyGPIO2.gpio import port
+
+hard_pullup=[port.GPIO2, port.GPIO3]
 
 ## init
 # 
@@ -25,6 +28,8 @@ def output(pin, value):
 
 ## Set pull-up/pull-down.
 def pullup(pin, cfg):
+    if pin in hard_pullup:
+        raise Exception("cannot change pullup")
     pass
 
 ## configure pin as cfg
