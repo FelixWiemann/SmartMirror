@@ -25,7 +25,7 @@ graph TD;
 ```
 
 ## Wiring
-
+schema
 ```mermaid
 graph TD;
     bpi[BananaPI M2 Zero]
@@ -37,5 +37,11 @@ graph TD;
 
 ```
 
+
+circuit diagram
+![Circuit diagram](./circuit.svg)
+
+circuit diagram done with 
+https://www.circuit-diagram.org/editor/
 
 
