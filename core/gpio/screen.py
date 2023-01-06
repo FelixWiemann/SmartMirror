@@ -10,6 +10,7 @@ class Screen():
         self.screen_on = True
         self.pin = port.GPIO27
         gpio.setcfg(self.pin, gpio.OUTPUT)
+        gpio.pullup(self.pin, gpio.PULLDOWN)
         self.sensor = MotionSensor(10,self.motionChanged, port.GPIO17)
         self.sensor.start()
 
