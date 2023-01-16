@@ -30,5 +30,4 @@ class MotionSensor(BackgroundObject):
 
     def readSensor(self):
         val = gpio.input(self.pin)
-        print (val)
         return MotionSensor.MOTION_DETECTED if val>0.5 else MotionSensor.NO_MOTION_DETECTED
