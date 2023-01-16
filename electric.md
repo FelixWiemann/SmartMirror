@@ -1,6 +1,7 @@
 # overview
 
 ## Setup
+shematic overview on the setup:
 
 ```mermaid
 graph TD;
@@ -25,23 +26,13 @@ graph TD;
 ```
 
 ## Wiring
-schema
-```mermaid
-graph TD;
-    bpi[BananaPI M2 Zero]
-    powerBtn[power Button\n of displaycontrol buttons]
-    motionsensor[Motion sensor]
+The banana pi m2 zero is the heart of the mirror.
+Using the motion sensor HC-SR501 PIR the system detects motion to turn the screen on or off.
+I wired a transistor in parallel to the power button of the lcd driver board. This allows switching the power button via an output of the banana pi.
 
-    bpi --gnd to toggle on/off-->powerBtn
-    bpi --GPIO.17--> motionsensor
-
-```
-
-
-circuit diagram
+here is the circuit diagram:
 ![Circuit diagram](./circuit.svg)
 
-circuit diagram done with 
-https://www.circuit-diagram.org/editor/
+circuit diagram created with https://www.circuit-diagram.org/editor/, cddx to import can be found in the source code.
 
 
