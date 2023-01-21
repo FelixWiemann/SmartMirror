@@ -23,8 +23,9 @@ export class AppComponent {
   @ViewChild("parent") parent?:ElementRef
 
   constructor(private http:HttpClient){
-    Config.create();
     (console as unknown as LoggingConsole).setHttpClient(http)
+    Config.create();
+    console.info ("starting screen")
     this.weather_provider = new OpenWeatherMap(http)
     //this.weather_provider = this.getDummyProvider()
     // this.generateDummyProviders()

@@ -19,20 +19,25 @@ export class SystemComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.updateData()
     setInterval(()=>{
       this.updateData()
     }, 1000*10)
   }
 
-  updateData():void{
-    let data = this.http.get<any>("http://localhost:12345/system/data")
-    data.forEach(
-      (args)=>{
-          this.temp = args.tmp
-          this.ram = args.ram_usage
-          this.cpu = args.cpu_usage
-          this.ip = args.local_ip
-      }
-    )
+  updateData(){
+    this.http.get<any>("http://localhost:12345/system/data").subscribe({
+      next: (value: any) => {
+        this.temp = value.tmp
+        this.ram = value.ram_usage
+        this.cpu = value.cpu_usage
+        this.ip = value.local_ip
+      },
+      error: (error: any) => {
+        console.error("failed to get data from server: ", error)
+        this.ip = "failed to get data " + error.name
+      },
+      complete: () => {}
+    })
   }
 }
