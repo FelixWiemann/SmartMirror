@@ -13,13 +13,16 @@ class BackgroundObject():
     def start(self):
         # if already running, return
         if self.run:
+            self.logger.warn("process already running")
             return
+        self.logger.debug("starting process")
         self.run=True
         t = threading.Thread(target=self._worker)
         t.start()
 
     def stop(self):
         self.run = False
+        self.logger.debug("stopping process")
 
     def _worker(self):
         while (self.run):
@@ -33,6 +36,8 @@ class BackgroundObject():
             if not threading.main_thread().is_alive():
                 self.logger.error("parent is dead, terminating")
                 self.run=False
+        self.logger.debug("process stopped")
     
     def work(self):
+        self.logger.warn("no work defined for process")
         pass

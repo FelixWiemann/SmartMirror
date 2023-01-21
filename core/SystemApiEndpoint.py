@@ -14,6 +14,7 @@ class SystemApiEndPoint(ApiEndPoint):
         self.Calls["ram"]=self.ram
         self.Calls["data"]=self.data
         self.Calls["ip"]=self.ip
+        self.count = 0
     
     def getTemp(self):
         if os.name == "nt":
@@ -31,7 +32,8 @@ class SystemApiEndPoint(ApiEndPoint):
         s.settimeout(0)
         try:
             # doesn't even have to be reachable
-            s.connect(('10.254.254.254', 1))
+            # use local network ip to not accidentally connect to someone random
+            s.connect(('192.168.0.254', 1))
             IP = s.getsockname()[0]
         except Exception:
             IP = '127.0.0.1'
@@ -43,7 +45,12 @@ class SystemApiEndPoint(ApiEndPoint):
         self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.get_ip())])
 
     def data(self, server):
-        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps(self.getTemp()|self.getRamUsage()|self.getCpuUsage()|self.get_ip())])
+        self.count = self.count + 1
+        data=  json.dumps(self.getTemp()|self.getRamUsage()|self.getCpuUsage()|self.get_ip())
+        if self.count > 10:
+            self.count=0
+            self.logger.debug(data)
+        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[data])
 
     def temp(self, server):
         self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.getTemp())])
