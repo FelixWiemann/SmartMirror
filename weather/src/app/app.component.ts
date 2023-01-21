@@ -7,6 +7,7 @@ import { WeatherProvider } from './WeatherProvider/weather-provider';
 import { DummyProvider } from './WeatherProvider/DummyProvider';
 import { CurrentWeatherTestProvider } from './WeatherProvider/CurrentWeatherTestProvider';
 import { LoggingConsole } from './LoggingConsole';
+import {SpeedTestService} from 'ng-speed-test';
 
 
 @Component({
@@ -14,7 +15,6 @@ import { LoggingConsole } from './LoggingConsole';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-
 @Injectable()
 export class AppComponent {
   title = 'weather test';
@@ -22,14 +22,23 @@ export class AppComponent {
   testprovider:CurrentWeatherTestProvider[][]=[]
   @ViewChild("parent") parent?:ElementRef
 
-  constructor(private http:HttpClient){
+  constructor(private http:HttpClient, private speedTestService: SpeedTestService){
     (console as unknown as LoggingConsole).setHttpClient(http)
     Config.create();
     console.info ("starting screen")
     this.weather_provider = new OpenWeatherMap(http)
     //this.weather_provider = this.getDummyProvider()
     // this.generateDummyProviders()
-    }
+    
+    // TODO vofo speedtest https://github.com/peterbaumert/ioBroker.vofo-speedtest/blob/master/main.js
+    setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
+  }
+
+  getSpeedData(){
+    this.speedTestService.getMbps().subscribe((speed)=>{
+      console.log("Speed: " + speed)
+    })
+  }
 
   getDummyProvider(){
     return new DummyProvider();
