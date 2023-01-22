@@ -39,3 +39,6 @@ ssh -t $target 'echo "deleting old build";
  echo "rebooting in 10..."; 
  sleep 10; 
  sudo reboot'
+ 
+sleep 60
+ssh $target -t "tail -f /var/log/mirror/server.log"
