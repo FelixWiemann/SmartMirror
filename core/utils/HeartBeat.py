@@ -1,13 +1,13 @@
 from RestApi import ApiEndPoint
 from utils.BackgroundObject import BackgroundObject
 import os
-from sys import platform
+from main import isPi
 
 
 class HeartBeat(ApiEndPoint, BackgroundObject):
     def __init__(self):
         ApiEndPoint.__init__(self)
-        BackgroundObject.__init__(self, 10, "server.HeartBeat")
+        BackgroundObject.__init__(self, 20, "server.HeartBeat")
         self.Calls["ping"] = self.ping
         self.beatsSinceLastCycle = 1
 
@@ -16,8 +16,8 @@ class HeartBeat(ApiEndPoint, BackgroundObject):
             self.logger.error("heartbeat failed!")
             self.stop()
             # reboot on linux
-            if platform == "linux" or "linux2": 
-                os.system('sudo shutdown -r now')
+            #if isPi: 
+            #    os.system('sudo shutdown -r now')
         self.beatsSinceLastCycle = 0
 
     def ping(self, server):
