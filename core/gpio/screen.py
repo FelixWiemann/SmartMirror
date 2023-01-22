@@ -2,6 +2,7 @@ from utils.BackgroundObject import BackgroundObject
 from gpio.motionsensor import MotionSensor
 from pyGPIO2.gpio import port, gpio
 import time 
+from main import isPi
 
 class Screen(BackgroundObject):
 
@@ -15,6 +16,9 @@ class Screen(BackgroundObject):
         self.onCount = 2
         self.start()
         self.logger.debug("initialized screen")
+        self.currentState = ""
+        self.On = "screen_on"
+        self.Off = "screen_off"
         
     def work(self):
         self.onCount = self.onCount - 1
@@ -24,25 +28,36 @@ class Screen(BackgroundObject):
             self.stop()
 
     def motionChanged(self, newValue):
-        if self.screen_on:
+        state = self.getStateFromFile()
+
+        if state==self.On and newValue==0:
             self.turnScreenOff()
-        else:
+        elif state==self.Off and newValue==1:
             self.turnScreenOn()
-        if self.screen_on != newValue==1:
-            self.logger.error("new screen state does not match motion sensor value")
+        else:
+
+            self.logger.debug("change screen state after startup")
+
+    def getStateFromFile(self):
+        if isPi:
+            return open("/var/mirror/state","rt").readline().strip()
+        else:
+             return "unknown"
+
+    def writeNewState(self, newState):
+        if isPi:
+            open("/var/mirror/state","wt").write(newState)
 
     def turnScreenOn(self):
         self.logger.debug("turned screen on")
-        self.screen_on=True
+        self.writeNewState(self.On)
         self.pulseOut()
-        pass
 
     def turnScreenOff(self):
         self.logger.debug("turned screen off")
-        self.screen_on=False
+        self.writeNewState(self.Off)
         self.pulseOut()
-        pass
-    
+
     def pulseOut(self):
         gpio.output(self.pin, 1)
         time.sleep(0.1)
