@@ -32,6 +32,19 @@ export class AppComponent {
     
     // TODO vofo speedtest https://github.com/peterbaumert/ioBroker.vofo-speedtest/blob/master/main.js
     setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
+    setInterval(()=>{this.heartBeat()},1000*5)
+  }
+
+  heartBeat(){
+    this.http.get<any>("http://localhost:12345/heartbeat/ping").subscribe({
+      next: (value: any) => {
+        
+      },
+      error: (error: any) => {
+        console.error("heartbeat failed")
+      },
+      complete: () => {}
+    })
   }
 
   getSpeedData(){

@@ -4,6 +4,8 @@ from SystemApiEndpoint import SystemApiEndPoint
 from RestApi import PostApiEndpint
 import logging
 
+from utils.HeartBeat import HeartBeat
+
 class HttpEndPoint(ApiEndPoint):
     def __init__(self) -> None:
         super().__init__()
@@ -13,6 +15,7 @@ class RestApi(ApiEndPoint):
         super().__init__()
         self.Calls["system"] = SystemApiEndPoint()
         self.Calls["favicon.ico"]=self.favicon
+        self.Calls["heartbeat"]=HeartBeat()
         self.Calls[""] = self.root
 
     def root(self, server):
