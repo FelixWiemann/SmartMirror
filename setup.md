@@ -8,7 +8,8 @@
     autologin-user=<user>
     autologin-user-timeout=0
 ```
-- install and autostart firefox with localhost as target (Exec=/snap/bin/firefox -kiosk localhost)
+- install and autostart chromium with localhost as target:
+    ```/usr/bin/chromium-browser localhost --start-fullscreen --incognito --kiosk --noerrdialogs --no-first-run```
 - install pip as root
 ```
  echo "getting pip" ;
