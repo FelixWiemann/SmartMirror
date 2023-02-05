@@ -3,6 +3,7 @@ from RestApi import ApiEndPoint
 from SystemApiEndpoint import SystemApiEndPoint
 from RestApi import PostApiEndpint
 import logging
+from gpio.screen import ScreenApi
 
 from utils.HeartBeat import HeartBeat
 
@@ -60,3 +61,4 @@ class PostApi(PostApiEndpint):
     def __init__(self) -> None:
         super().__init__()
         self.Calls["console"] = LogApiEndpoint()
+        self.Calls["screen"] = ScreenApi()

@@ -1,12 +1,16 @@
+from RestApi import ApiEndPoint
 from utils.BackgroundObject import BackgroundObject
 from gpio.motionsensor import MotionSensor
 from pyGPIO2.gpio import port, gpio
 import time 
 from main import isPi
 
+screen=None
+
 class Screen(BackgroundObject):
 
     def __init__(self) -> None:
+        global screen
         super().__init__(60, "gpio.screen")
         self.screen_on = True
         self.pin = port.GPIO27
@@ -19,6 +23,7 @@ class Screen(BackgroundObject):
         self.currentState = ""
         self.On = "screen_on"
         self.Off = "screen_off"
+        screen=self
         
     def work(self):
         self.onCount = self.onCount - 1
@@ -62,3 +67,14 @@ class Screen(BackgroundObject):
         gpio.output(self.pin, 1)
         time.sleep(0.1)
         gpio.output(self.pin, 0)
+
+class ScreenApi(ApiEndPoint):
+    def __init__(self) -> None:
+        super().__init__()
+        self.Calls["toggle"]=self.toggle
+
+    def toggle(self, server, data):
+        global screen
+        self.logger.warn("toggling screen without changing state!")
+        screen.pulseOut()
+        self.sendOk(server)

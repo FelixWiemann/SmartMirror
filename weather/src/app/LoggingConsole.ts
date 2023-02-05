@@ -3,16 +3,18 @@ import { HttpClient } from "@angular/common/http"
 let oldConsole : Console
 let httpClient:HttpClient
 let url=`http://localhost:12345/console/`
+
 export class LoggingConsole{
     
     indent = "    " 
 
     constructor(){
-        oldConsole=console
+        oldConsole = console
     }
 
-    public setHttpClient= (http:HttpClient)=>{
+    public setHttpClient=(http:HttpClient)=>{
         httpClient=http
+        url=window.location.href.substring(0, window.location.href.length-1)+":12345/console/"
     }
 
     getMessage = (message?: any, ...optionalParams: any[])=>{

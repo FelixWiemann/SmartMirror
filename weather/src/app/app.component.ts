@@ -8,6 +8,7 @@ import { DummyProvider } from './WeatherProvider/DummyProvider';
 import { CurrentWeatherTestProvider } from './WeatherProvider/CurrentWeatherTestProvider';
 import { LoggingConsole } from './LoggingConsole';
 import {SpeedTestService} from 'ng-speed-test';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 
 @Component({
@@ -21,8 +22,9 @@ export class AppComponent {
   weather_provider:WeatherProvider
   testprovider:CurrentWeatherTestProvider[][]=[]
   @ViewChild("parent") parent?:ElementRef
+  isLocal=false
 
-  constructor(private http:HttpClient, private speedTestService: SpeedTestService){
+  constructor(private http:HttpClient, private speedTestService: SpeedTestService, private route: ActivatedRoute){
     (console as unknown as LoggingConsole).setHttpClient(http)
     Config.create();
     console.info ("starting screen")
@@ -31,8 +33,8 @@ export class AppComponent {
     // this.generateDummyProviders()
     
     // TODO vofo speedtest https://github.com/peterbaumert/ioBroker.vofo-speedtest/blob/master/main.js
-    setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
-    setInterval(()=>{this.heartBeat()},1000*5)
+    // setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
+    
   }
 
   heartBeat(){
@@ -57,12 +59,30 @@ export class AppComponent {
     return new DummyProvider();
   }
 
+  ngOnInit() {
+    this.route.queryParams.forEach((param)=>{
+      if (param["islocal"]){
+        this.isLocal = true
+        console.debug("is local")
+        setInterval(()=>{this.heartBeat()},1000*5)
+      }else{
+        
+      }
+    })
+  }
+
   ngAfterViewInit (): void {
     // set size to screen
     if (this.parent){
       this.parent.nativeElement.style.width=screen.width+"px"
       this.parent.nativeElement.style.height=screen.height+"px"
     }
+  }
+
+  deactivateScreen():void{
+    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/screen/toggle","toggle").subscribe(
+      {next: data => {}}
+    ) 
   }
 
   generateDummyProviders(){

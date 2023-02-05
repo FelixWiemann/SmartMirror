@@ -42,3 +42,9 @@ graph TD;
     python--turns on/off screen-->screen
 
 ```
+
+## remote access
+the mirror can be connected to via it's public IP with a webbrowser
+this allows remote control of the mirror.
+be aware that the python server is open to every remote; you should not put it into the open net
+
