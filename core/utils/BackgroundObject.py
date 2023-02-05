@@ -18,6 +18,7 @@ class BackgroundObject():
         self.logger.debug("starting process")
         self.run=True
         t = threading.Thread(target=self._worker)
+        t.name=self.name
         t.start()
 
     def stop(self):
