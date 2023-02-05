@@ -3,7 +3,7 @@ from sys import platform
 hostName = "localhost"
 serverPort = 12345
 
-isPi = platform == "linux" or "linux2"
+isPi = platform == "linux" or platform == "linux2"
 
 def main():
     
