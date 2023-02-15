@@ -16,8 +16,9 @@ class HeartBeat(ApiEndPoint, BackgroundObject):
             self.logger.error("heartbeat failed!")
             self.stop()
             # reboot on linux
-            #if isPi: 
-            #    os.system('sudo shutdown -r now')
+            if isPi: 
+                self.logger.warn("rebooting...")
+                os.system('sudo shutdown -r now')
         self.beatsSinceLastCycle = 0
 
     def ping(self, server):
