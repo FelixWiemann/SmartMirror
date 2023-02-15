@@ -8,9 +8,12 @@ class web():
         self.logger.info("starting webview")
         if isPi:
             import gi
+            import pyautogui
             gi.require_version("Soup",'2.4')
             import time
             time.sleep(30) #wait for system to load into ui
+            # move cursor out of the way; webview does not support cursor:none
+            pyautogui.moveTo(99999,99999)
         else:
             self.logger.debug("will not activate view on windows")
         import webview
