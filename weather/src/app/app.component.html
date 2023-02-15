@@ -1,16 +1,20 @@
 <body class="parent" #parent> 
     <div *ngIf="isLocal; then thenBlock; else elseBlock">this is ignored</div>
     <ng-template #thenBlock>
-        <div class ="current_weather_container">
-            <app-current-weather-display [WeatherProvider]="weather_provider" [UpdateInterval]=10></app-current-weather-display>
-        </div>
-        <div class ="chart_container">
-            <app-line-chart id="weatherchart" [WeatherProvider]="weather_provider" [UpdateInterval]=120></app-line-chart>
-        </div>
-        <app-system></app-system>
+            <div class ="current_weather_container">
+                <app-current-weather-display [WeatherProvider]="weather_provider" [UpdateInterval]=10></app-current-weather-display>
+            </div>
+            <div class ="chart_container">
+                <app-line-chart id="weatherchart" [WeatherProvider]="weather_provider" [UpdateInterval]=120></app-line-chart>
+            </div>
+            <app-system></app-system>
     </ng-template>
     <ng-template #elseBlock>
-        <button (click)="deactivateScreen()">deactivate screen</button>
+            <ul>
+                <li><button class="btn" (click)="deactivateScreen()">deactivate screen</button></li>
+                <li><button class="btn" (click)="shutdown()">shutdown system</button></li>
+                <li><button class="btn" (click)="reboot()">reboot system</button>/li>
+            </ul>
     </ng-template>
 </body>
 

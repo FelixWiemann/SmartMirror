@@ -84,6 +84,16 @@ export class AppComponent {
       {next: data => {}}
     ) 
   }
+  reboot():void{
+    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/reboot","reboot").subscribe(
+      {next: data => {}}
+    ) 
+  }
+  shutdown():void{
+    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/shutdown","shutdown").subscribe(
+      {next: data => {}}
+    ) 
+  }
 
   generateDummyProviders(){
     let images=["../../assets/weather/animated/day.svg",

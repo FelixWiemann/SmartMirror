@@ -62,3 +62,4 @@ class PostApi(PostApiEndpint):
         super().__init__()
         self.Calls["console"] = LogApiEndpoint()
         self.Calls["screen"] = ScreenApi()
+        self.Calls["system"] = SystemApiEndPoint()

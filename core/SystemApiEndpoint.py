@@ -5,6 +5,7 @@ import socket
 import psutil
 
 from RestApi import ApiEndPoint
+from main import isPi
 
 class SystemApiEndPoint(ApiEndPoint):
     def __init__(self):
@@ -14,6 +15,8 @@ class SystemApiEndPoint(ApiEndPoint):
         self.Calls["ram"]=self.ram
         self.Calls["data"]=self.data
         self.Calls["ip"]=self.ip
+        self.Calls["reboot"]=self.reboot
+        self.Calls["shutdown"]=self.shutdown
         self.count = 0
     
     def getTemp(self):
@@ -64,3 +67,14 @@ class SystemApiEndPoint(ApiEndPoint):
     def ip(self, server):
         self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.get_ip())])
     
+    def reboot(self, server, data):
+        self.logger.warn("rebooting...")
+        if isPi: 
+            os.system('sudo shutdown -r now')
+        self.sendOk(server)
+
+    def shutdown(self, server, data):
+        self.logger.warn("shutting down...")
+        if isPi: 
+            os.system('sudo shutdown -H now')
+        self.sendOk(server)
