@@ -1,32 +1,54 @@
 
 from main import isPi
 import logging
+import time
+import functools
+
+def catchException(fun):
+    @functools.wraps(fun)
+    def wrapper(*args,**kwargs):
+        try:
+            res = fun(*args,**kwargs)
+            return res
+        except Exception as ex:
+            try:
+                import requests
+                import traceback
+                x = requests.post("http://127.0.0.1:12345/console/error", traceback.format_exc())
+            except Exception as e:
+                pass
+    return wrapper
 
 class web():
     def __init__(self) -> None:
         self.logger = logging.getLogger("webview")
         self.logger.info("starting webview")
+        self.startView()
+
+    @catchException
+    def startView(self)->None:
         if isPi:
             import gi
-            import pyautogui
             gi.require_version("Soup",'2.4')
-            import time
-            time.sleep(30) #wait for system to load into ui
+            
+            #time.sleep(30) #wait for system to load into ui
             # move cursor out of the way; webview does not support cursor:none
-            pyautogui.moveTo(99999,99999)
+            #self.moveCursor()   
         else:
             self.logger.debug("will not activate view on windows")
         import webview
         self.window = webview.create_window("test","http://127.0.0.1:80?islocal=true",fullscreen=isPi, frameless=isPi)
-        webview.start()
+        webview.start(self.moveCursor)
+    
+    @catchException
+    def moveCursor(self)->None:
+        time.sleep(10)
+        # todo does not work :(
+        import pyautogui
+        pyautogui.moveTo(99999,99999)
+
+    
 
 if __name__=="__main__":
-    import utils.logger
-    import traceback
-    # utils.logger.initLogger()
-    print("starting web")
-    try:
-        web()
-    except Exception as ex:
-        print("failed to exec :" + traceback.format_exc())
-        logging.exception("failed to run web")
+    time.sleep(30)
+    web()
