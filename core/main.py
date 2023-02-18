@@ -13,12 +13,18 @@ def main():
     from pyGPIO2.gpio import gpio
     from gpio.screen import Screen
     import time
+    import datetime
 
-    utils.logger.initLogger()
-    gpio.init()
-    server = Server(hostName, serverPort)
-    server.start()
-    screen = Screen()
+    try:
+        utils.logger.initLogger()
+        gpio.init()
+        if isPi:
+            open("/var/mirror/lastreboot","wt").write(datetime.datetime.now().strftime("%Y-%m-%d, %H:%M:%S"))
+        server = Server(hostName, serverPort)
+        server.start()
+        screen = Screen()
+    except Exception as ex:
+        logging.getLogger().error("error: ",exc_info=ex)
 
     try:
         while (True):

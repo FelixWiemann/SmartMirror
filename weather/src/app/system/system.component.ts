@@ -14,6 +14,7 @@ export class SystemComponent implements OnInit {
   ram=0
   cpu=0
   ip=""
+  last_boot=""
 
   constructor(private http:HttpClient) {
   }
@@ -23,10 +24,19 @@ export class SystemComponent implements OnInit {
     setInterval(()=>{
       this.updateData()
     }, 1000*10)
+    this.http.get<any>("http://localhost:12345/system/lastboot").subscribe({
+      next: (value: any) => {
+        this.last_boot = value.lastboot
+      },
+      error: (error: any) => {
+        console.error("failed to get last boot from server: ", error)
+      },
+      complete: () => {}
+    })
   }
 
   updateData(){
-    this.http.get<any>("http://localhost:12345/system/data").subscribe({
+    this.http.get<any>("http://localhost:12345/system/data").subscribe({ 
       next: (value: any) => {
         this.temp = value.tmp
         this.ram = value.ram_usage

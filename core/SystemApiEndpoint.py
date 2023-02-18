@@ -17,6 +17,7 @@ class SystemApiEndPoint(ApiEndPoint):
         self.Calls["ip"]=self.ip
         self.Calls["reboot"]=self.reboot
         self.Calls["shutdown"]=self.shutdown
+        self.Calls["lastboot"]=self.lastReboot
         self.count = 0
     
     def getTemp(self):
@@ -45,7 +46,7 @@ class SystemApiEndPoint(ApiEndPoint):
             return {"local_ip": IP}
 
     def ip(self, server):
-        self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.get_ip())])
+        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps(self.get_ip())])
 
     def data(self, server):
         self.count = self.count + 1
@@ -56,16 +57,16 @@ class SystemApiEndPoint(ApiEndPoint):
         self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[data])
 
     def temp(self, server):
-        self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.getTemp())])
+        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps(self.getTemp())])
 
     def cpu(self, server):
-        self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.getCpuUsage())])
+        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps(self.getCpuUsage())])
 
     def ram(self, server):
-        self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.getRamUsage())])
+        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps(self.getRamUsage())])
 
     def ip(self, server):
-        self.send(server, 200, [self.ContentTypeTextJson],[json.dumps(self.get_ip())])
+        self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps(self.get_ip())])
     
     def reboot(self, server, data):
         self.logger.warn("rebooting...")
@@ -78,3 +79,9 @@ class SystemApiEndPoint(ApiEndPoint):
         if isPi: 
             os.system('sudo shutdown -H now')
         self.sendOk(server)
+
+    def lastReboot(self, server):
+        if isPi:
+            self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps({"lastboot":open("/var/mirror/lastreboot","rt").readline().strip()})])
+        else:
+            self.send(server, 200, [self.ContentTypeTextJson, self.AccessControlAllowOrigin],[json.dumps({"lastboot":"unknown"})])

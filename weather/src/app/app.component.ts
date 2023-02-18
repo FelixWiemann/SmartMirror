@@ -27,7 +27,6 @@ export class AppComponent {
   constructor(private http:HttpClient, private speedTestService: SpeedTestService, private route: ActivatedRoute){
     (console as unknown as LoggingConsole).setHttpClient(http)
     Config.create();
-    console.info ("starting screen")
     this.weather_provider = new OpenWeatherMap(http)
     //this.weather_provider = this.getDummyProvider()
     // this.generateDummyProviders()
@@ -62,6 +61,7 @@ export class AppComponent {
   ngOnInit() {
     this.route.queryParams.forEach((param)=>{
       if (param["islocal"]){
+        console.info ("starting screen")
         this.isLocal = true
         console.debug("is local")
         setInterval(()=>{this.heartBeat()},1000*5)
