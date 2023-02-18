@@ -8,7 +8,7 @@ def initLogger():
     else:
         path='/var/log/mirror/server.log'
     handler = RotatingFileHandler(path, maxBytes=250000, backupCount=5)
-    logging.basicConfig(format='%(asctime)s  %(levelname)-6s %(name)-20s %(message)s', level=logging.DEBUG, handlers=[handler])
+    logging.basicConfig(format='%(asctime)s  %(levelname)-8s %(name)-20s %(message)s', level=logging.DEBUG, handlers=[handler])
     logging.info("starting server...")
     logging.info("initialized logger...")
     pass
