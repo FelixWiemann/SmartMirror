@@ -52,7 +52,10 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
         this.updateChart();
         this.interval = setInterval(()=>
         {
-          this.provider?.getForeCast().then((data)=>{this.updateChart()})
+          this.provider?.getForeCast().then((data)=>{
+            this.weatherdata = data
+            this.updateChart()
+          })
         },1000*60*this.timer)
       })
     },1000*10)
