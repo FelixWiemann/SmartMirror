@@ -9,6 +9,7 @@ import { CurrentWeatherTestProvider } from './WeatherProvider/CurrentWeatherTest
 import { LoggingConsole } from './LoggingConsole';
 import {SpeedTestService} from 'ng-speed-test';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { GaspriceService } from './gasprice.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class AppComponent {
   @ViewChild("parent") parent?:ElementRef
   isLocal=false
 
-  constructor(private http:HttpClient, private speedTestService: SpeedTestService, private route: ActivatedRoute){
+  constructor(private http:HttpClient, private gasPrice:GaspriceService, private speedTestService: SpeedTestService, private route: ActivatedRoute){
     (console as unknown as LoggingConsole).setHttpClient(http)
     Config.create();
     this.weather_provider = new OpenWeatherMap(http)
@@ -65,6 +66,9 @@ export class AppComponent {
         this.isLocal = true
         console.debug("is local")
         setInterval(()=>{this.heartBeat()},1000*5)
+        this.gasPrice.getGasPrice().then((val)=>{
+          console.log(val);
+        })
       }else{
         
       }
