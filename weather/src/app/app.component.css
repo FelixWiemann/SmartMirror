@@ -7,14 +7,3 @@
     background: black;
     border-color: black;
 }
-.chart_container{
-    position: absolute;
-    right: 0cm;
-}
-.current_weather_container{
-    position: absolute;
-}
-.btn{
-    height: 50px;
-    width: 200px;
-}

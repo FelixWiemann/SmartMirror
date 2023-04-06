@@ -9,12 +9,16 @@ import { WeatherChartModule } from './weather-chart/weather-chart.module';
 import { CurrentWeatherDisplayComponent } from './current-weather-display/current-weather-display.component';
 import { SystemComponent } from './system/system.component';
 import { SpeedTestModule } from 'ng-speed-test';
+import { RemoteComponent } from './remote/remote.component';
+import { MirrorComponent } from './mirror/mirror.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CurrentWeatherDisplayComponent,
-    SystemComponent
+    SystemComponent,
+    RemoteComponent,
+    MirrorComponent
   ],
   imports: [
     BrowserModule,

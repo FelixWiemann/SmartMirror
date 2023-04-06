@@ -16,10 +16,6 @@ export class Config{
         this.location=_cfg.location;
         this.gas=_cfg.gas;
     }
-
-    public static create():void{
-        new Config()
-    }
 }
 
 class GasCfg{

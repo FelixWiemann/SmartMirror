@@ -1,0 +1,7 @@
+<div class ="current_weather_container">
+    <app-current-weather-display [WeatherProvider]="weather_provider" [UpdateInterval]=10></app-current-weather-display>
+</div>
+<div class ="chart_container">
+    <app-line-chart id="weatherchart" [WeatherProvider]="weather_provider" [UpdateInterval]=120></app-line-chart>
+</div>
+<app-system></app-system>

@@ -21,9 +21,8 @@ export class AppComponent {
   @ViewChild("parent") parent?:ElementRef
   isLocal=false
 
-  constructor(private http:HttpClient,public weather_provider:OpenWeatherMap, private gasPrice:GaspriceService, private speedTestService: SpeedTestService, private route: ActivatedRoute){
-    (console as unknown as LoggingConsole).setHttpClient(http)
-    Config.create();    
+  constructor(private http:HttpClient, private gasPrice:GaspriceService, private speedTestService: SpeedTestService, private route: ActivatedRoute){
+    (console as unknown as LoggingConsole).setHttpClient(http)  
     // TODO vofo speedtest https://github.com/peterbaumert/ioBroker.vofo-speedtest/blob/master/main.js
     // setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
   }
@@ -72,22 +71,6 @@ export class AppComponent {
       this.parent.nativeElement.style.width=screen.width+"px"
       this.parent.nativeElement.style.height=screen.height+"px"
     }
-  }
-
-  deactivateScreen():void{
-    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/screen/toggle","toggle").subscribe(
-      {next: data => {}}
-    ) 
-  }
-  reboot():void{
-    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/reboot","reboot").subscribe(
-      {next: data => {}}
-    ) 
-  }
-  shutdown():void{
-    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/shutdown","shutdown").subscribe(
-      {next: data => {}}
-    ) 
   }
 }
 
