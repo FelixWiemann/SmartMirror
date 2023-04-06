@@ -6,13 +6,13 @@ import { Injectable } from '@angular/core';
 })
 export class Config{
 
-    static weather:WeatherCfg;
+    public weather:WeatherCfg;
     public location:LocationCfg;
     public gas:GasCfg;
 
     constructor (){
-        const _cfg = require("../../../config.json")
-        Config.weather=_cfg.weather;
+        const _cfg = require("../../../../config.json")
+        this.weather=_cfg.weather;
         this.location=_cfg.location;
         this.gas=_cfg.gas;
     }

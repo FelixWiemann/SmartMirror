@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Config } from "../config"
+import { Config } from "../services/configuration.service"
 import { WeatherForecast, WeatherProvider } from './weather-provider';
 
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+  })
 export class OpenWeatherMap implements WeatherProvider {
     api_key:string;
     long:string;
@@ -13,10 +14,10 @@ export class OpenWeatherMap implements WeatherProvider {
     foreCastCall:string
     imagesource="../../assets/weather/static/"
 
-    constructor(private http:HttpClient){
-      this.api_key=Config.weather.api_key;
-      this.long=Config.weather.lon;
-      this.lat=Config.weather.lat;  
+    constructor(private http:HttpClient, private cfg:Config){
+      this.api_key=cfg.weather.api_key;
+      this.long=cfg.location.lon;
+      this.lat=cfg.location.lat;  
       this.currentWeatherCall=`https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.long}&appid=${this.api_key}&units=metric`
       this.foreCastCall=`https://api.openweathermap.org/data/2.5/forecast?lat=${this.lat}&lon=${this.long}&appid=${this.api_key}&units=metric`
     }

@@ -1,15 +1,13 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { OpenWeatherMap } from "./WeatherProvider/openweathermap"
+import { OpenWeatherMap } from "./WeatherProvider/openweathermap.service"
 import { HttpClient } from '@angular/common/http';
-import { Config } from './config';
+import { Config } from './services/configuration.service';
 import { Injectable } from '@angular/core';
-import { WeatherProvider } from './WeatherProvider/weather-provider';
 import { DummyProvider } from './WeatherProvider/DummyProvider';
-import { CurrentWeatherTestProvider } from './WeatherProvider/CurrentWeatherTestProvider';
 import { LoggingConsole } from './LoggingConsole';
 import {SpeedTestService} from 'ng-speed-test';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { GaspriceService } from './gasprice.service';
+import { GaspriceService } from './services/gasprice.service';
 
 
 @Component({
@@ -20,21 +18,14 @@ import { GaspriceService } from './gasprice.service';
 @Injectable()
 export class AppComponent {
   title = 'weather test';
-  weather_provider:WeatherProvider
-  testprovider:CurrentWeatherTestProvider[][]=[]
   @ViewChild("parent") parent?:ElementRef
   isLocal=false
 
-  constructor(private http:HttpClient, private gasPrice:GaspriceService, private speedTestService: SpeedTestService, private route: ActivatedRoute){
+  constructor(private http:HttpClient,public weather_provider:OpenWeatherMap, private gasPrice:GaspriceService, private speedTestService: SpeedTestService, private route: ActivatedRoute){
     (console as unknown as LoggingConsole).setHttpClient(http)
-    Config.create();
-    this.weather_provider = new OpenWeatherMap(http)
-    //this.weather_provider = this.getDummyProvider()
-    // this.generateDummyProviders()
-    
+    Config.create();    
     // TODO vofo speedtest https://github.com/peterbaumert/ioBroker.vofo-speedtest/blob/master/main.js
     // setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
-    
   }
 
   heartBeat(){
@@ -66,9 +57,9 @@ export class AppComponent {
         this.isLocal = true
         console.debug("is local")
         setInterval(()=>{this.heartBeat()},1000*5)
-        this.gasPrice.getGasPrice().then((val)=>{
+        /*this.gasPrice.getGasPrice().then((val)=>{
           console.log(val);
-        })
+        })*/
       }else{
         
       }
@@ -97,26 +88,6 @@ export class AppComponent {
     this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/shutdown","shutdown").subscribe(
       {next: data => {}}
     ) 
-  }
-
-  generateDummyProviders(){
-    let images=["../../assets/weather/animated/day.svg",
-    "../../assets/weather/animated/day.svg",
-    "../../assets/weather/animated/day.svg",
-    "../../assets/weather/animated/cloudy-day-1.svg",
-    "../../assets/weather/animated/cloudy-day-1.svg",
-    "../../assets/weather/animated/cloudy-day-2.svg",
-    "../../assets/weather/animated/cloudy-day-2.svg",
-    "../../assets/weather/animated/cloudy-day-3.svg",
-    "../../assets/weather/animated/cloudy-day-3.svg",
-    "../../assets/weather/animated/cloudy.svg"]
-
-    for (let clouds=0; clouds<10; clouds++){
-      this.testprovider.push([])
-      for (let tmp=0;tmp<15;tmp++){
-        this.testprovider[clouds].push(new CurrentWeatherTestProvider(-10+tmp*3,clouds*10,"",images[clouds]))
-      }
-    }
   }
 }
 

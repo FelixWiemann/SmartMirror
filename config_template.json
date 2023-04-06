@@ -1,8 +1,6 @@
 {
     "weather":{
-        "api_key":"<open wheather map api key>",
-        "lat":"<latitude>",
-        "lon":"<longitude>"
+        "api_key":"<open wheather map api key>"
     },
     "location":{
         "lat":"<latitude>",
