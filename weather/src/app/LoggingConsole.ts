@@ -14,7 +14,7 @@ export class LoggingConsole{
 
     public setHttpClient=(http:HttpClient)=>{
         httpClient=http
-        url=window.location.href.substring(0, window.location.href.length-1)+":12345/console/"
+        url= window.location.protocol + '//' + window.location.hostname +":12345/console/"
     }
 
     getMessage = (message?: any, ...optionalParams: any[])=>{
