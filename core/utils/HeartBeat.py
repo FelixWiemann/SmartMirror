@@ -7,7 +7,7 @@ from main import isPi
 class HeartBeat(ApiEndPoint, BackgroundObject):
     def __init__(self):
         ApiEndPoint.__init__(self)
-        BackgroundObject.__init__(self, 20, "server.HeartBeat")
+        BackgroundObject.__init__(self, 60, "server.HeartBeat")
         self.Calls["ping"] = self.ping
         self.beatsSinceLastCycle = 1
 
