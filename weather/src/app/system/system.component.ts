@@ -1,5 +1,6 @@
 import { Component, Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ConfigService } from '../services/configuration.service';
 
 @Component({
   selector: 'app-system',
@@ -16,7 +17,9 @@ export class SystemComponent implements OnInit {
   ip=""
   last_boot=""
 
-  constructor(private http:HttpClient) {
+  constructor(
+    private http:HttpClient,
+    private cfg:ConfigService) {
   }
 
   ngOnInit(): void {
@@ -24,7 +27,7 @@ export class SystemComponent implements OnInit {
     setInterval(()=>{
       this.updateData()
     }, 1000*10)
-    this.http.get<any>("http://localhost:12345/system/lastboot").subscribe({
+    this.http.get<any>(this.cfg.server.host+":"+this.cfg.server.port+"/system/lastboot").subscribe({
       next: (value: any) => {
         this.last_boot = value.lastboot
       },
@@ -36,7 +39,7 @@ export class SystemComponent implements OnInit {
   }
 
   updateData(){
-    this.http.get<any>("http://localhost:12345/system/data").subscribe({ 
+    this.http.get<any>(this.cfg.server.host+":"+this.cfg.server.port+"/system/data").subscribe({ 
       next: (value: any) => {
         this.temp = value.tmp
         this.ram = value.ram_usage

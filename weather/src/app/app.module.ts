@@ -8,9 +8,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { WeatherChartModule } from './weather-chart/weather-chart.module';
 import { CurrentWeatherDisplayComponent } from './current-weather-display/current-weather-display.component';
 import { SystemComponent } from './system/system.component';
-import { SpeedTestModule } from 'ng-speed-test';
 import { RemoteComponent } from './remote/remote.component';
 import { MirrorComponent } from './mirror/mirror.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -24,8 +25,9 @@ import { MirrorComponent } from './mirror/mirror.component';
     BrowserModule,
     HttpClientModule,
     WeatherChartModule,
-    SpeedTestModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NoopAnimationsModule,
+    MatSnackBarModule
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent]

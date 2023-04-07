@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Config } from "../services/configuration.service"
+import { ConfigService } from "../services/configuration.service"
 import { WeatherForecast, WeatherProvider } from './weather-provider';
 
 @Injectable({
@@ -14,7 +14,9 @@ export class OpenWeatherMap implements WeatherProvider {
     foreCastCall:string
     imagesource="../../assets/weather/static/"
 
-    constructor(private http:HttpClient, private cfg:Config){
+    constructor(
+        private http:HttpClient, 
+        private cfg:ConfigService){
       this.api_key=cfg.weather.api_key;
       this.long=cfg.location.lon;
       this.lat=cfg.location.lat;  

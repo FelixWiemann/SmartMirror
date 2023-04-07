@@ -1,11 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { OpenWeatherMap } from "./WeatherProvider/openweathermap.service"
 import { HttpClient } from '@angular/common/http';
-import { Config } from './services/configuration.service';
+import { ConfigService } from './services/configuration.service';
 import { Injectable } from '@angular/core';
 import { DummyProvider } from './WeatherProvider/DummyProvider';
 import { LoggingConsole } from './LoggingConsole';
-import {SpeedTestService} from 'ng-speed-test';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { GaspriceService } from './services/gasprice.service';
 
@@ -21,14 +19,18 @@ export class AppComponent {
   @ViewChild("parent") parent?:ElementRef
   isLocal=false
 
-  constructor(private http:HttpClient, private gasPrice:GaspriceService, private speedTestService: SpeedTestService, private route: ActivatedRoute){
+  constructor(
+    private http:HttpClient, 
+    private gasPrice:GaspriceService, 
+    private route: ActivatedRoute, 
+    private cfg:ConfigService){
     (console as unknown as LoggingConsole).setHttpClient(http)  
     // TODO vofo speedtest https://github.com/peterbaumert/ioBroker.vofo-speedtest/blob/master/main.js
     // setInterval(()=>{this.getSpeedData()},1000*60*5) // speedtest every 5 min
   }
 
   heartBeat(){
-    this.http.get<any>("http://localhost:12345/heartbeat/ping").subscribe({
+    this.http.get<any>(this.cfg.server.local_adress+"/heartbeat/ping").subscribe({
       next: (value: any) => {
         
       },
@@ -36,12 +38,6 @@ export class AppComponent {
         console.error("heartbeat failed")
       },
       complete: () => {}
-    })
-  }
-
-  getSpeedData(){
-    this.speedTestService.getMbps().subscribe((speed)=>{
-      console.log("Speed: " + speed)
     })
   }
 

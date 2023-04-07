@@ -10,5 +10,8 @@
         "api_key":"<tankerkönig api key>",
         "rad":"5",
         "type":"<gas type>"
+    },
+    "server":{
+        "remote_port":"12345"
     }
 }

@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import {MatSnackBar, MatSnackBarRef} from '@angular/material/snack-bar';
+import { ConfigService } from '../services/configuration.service';
 
 @Component({
   selector: 'app-remote',
@@ -8,23 +10,41 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RemoteComponent implements OnInit {
 
-  constructor(private http:HttpClient) { }
+  private snackBarDuration=3*1000;
+  private remoteLocation="";
+  
+  constructor(
+    private http:HttpClient,
+    private snackBar: MatSnackBar, 
+    private cfg:ConfigService) {
+    this.remoteLocation=window.location.protocol + '//' + window.location.hostname;
+   }
 
   ngOnInit(): void {
   }  
 
   deactivateScreen():void{
-    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/screen/toggle","toggle").subscribe(
-      {next: data => {}}
-    ) 
+    this.http.post(this.remoteLocation+":"+this.cfg.server.port+"/screen/toggle","toggle").subscribe(
+      {
+        next: data => {
+          console.log(data)
+          this.snackBar.open("toggling screen",undefined,{duration:this.snackBarDuration})
+        },
+        error: error=>{
+          
+        }
+      }
+    )
   }
   reboot():void{
-    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/reboot","reboot").subscribe(
-      {next: data => {}}
+    this.http.post(this.remoteLocation+":"+this.cfg.server.port+"/system/reboot","reboot").subscribe(
+      {next: data => {
+        this.snackBar.open("rebooting",undefined,{duration:this.snackBarDuration})
+      }}
     ) 
   }
   shutdown():void{
-    this.http.post(window.location.href.substring(0, window.location.href.length-1)+":12345/system/shutdown","shutdown").subscribe(
+    this.http.post(this.remoteLocation+":"+this.cfg.server.port+"/system/shutdown","shutdown").subscribe(
       {next: data => {}}
     ) 
   }
