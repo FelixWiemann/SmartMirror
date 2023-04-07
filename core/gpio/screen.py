@@ -16,7 +16,7 @@ class Screen(BackgroundObject):
         self.pin = port.GPIO27
         gpio.setcfg(self.pin, gpio.OUTPUT)
         gpio.pullup(self.pin, gpio.PULLDOWN)
-        self.sensor = MotionSensor(5,self.motionChanged, port.GPIO17)
+        self.sensor = MotionSensor(2,self.motionChanged, port.GPIO17)
         self.onCount = 2
         self.start()
         self.logger.debug("initialized screen")
