@@ -39,6 +39,6 @@ class WeatherCfg{
 }
 class Server{
     port="";
-    host="http://localhost";
+    host="";
     local_adress=""
 }
