@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { Gradient, GradientUtils } from '../WeatherProvider/ColorGradient';
 import { WeatherForecast } from '../WeatherProvider/weather-provider';
 import { WeatherChart } from '../WeatherProvider/WeatherChart';
+import {OpenWeatherMap} from '../WeatherProvider/openweathermap.service'
 
 @Component({
   selector: 'app-current-weather-display',
@@ -16,6 +17,11 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   time = ""
   temperatureGradients:Gradient[]=[]
   cloudGradients:Gradient[]=[]
+
+  constructor(private weather:OpenWeatherMap){
+    super()
+  }
+
   /**
    * element for temperature value
    */
@@ -30,6 +36,9 @@ export class CurrentWeatherDisplayComponent extends WeatherChart implements OnIn
   @ViewChild("background") background_element?:ElementRef
 
   ngOnInit(): void {
+    if (this.provider==undefined) {
+      this.provider=this.weather
+    }
 
     this.cloudGradients.push(new Gradient(0,50,"#1499ed","#2684ba"))
     this.cloudGradients.push(new Gradient(50,70,"#2684ba","#377293"))
