@@ -8,12 +8,12 @@ then
 fi
   
 echo "deploying build to" $target
-rm -r ./weather/dist
-pushd ./weather
+rm -r ./display/dist
+pushd ./display
 ng build 
 popd
 rm ./mirror.tgz
-tar -zcvf mirror.tgz -C ./weather/dist/weather .
+tar -zcvf mirror.tgz -C ./display/dist/display .
 pushd ./core
 python -m pip freeze > requirements.txt
 popd
