@@ -2,12 +2,14 @@
 ## bananapi setup:
 - setup pi with latest armbian
 - install apache2 and configure it with defaults
-- create new user with auto logon (new file \etc\lightdm\lightdm.conf.d\12-mirror.conf with content 
+- create new user with auto logon & xserver command to hide cursor (new file \etc\lightdm\lightdm.conf.d\12-mirror.conf with content
 ```  
     [SeatDefaults]
     autologin-user=<user>
     autologin-user-timeout=0
+    xserver-command=X -bs -core -nocursor
 ```
+)
 - install and autostart python with web.py as target:
     ```python3 /var/mirror/web.py```
 

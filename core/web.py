@@ -30,24 +30,13 @@ class web():
         if isPi:
             import gi
             gi.require_version("Soup",'2.4')
-            
-            #time.sleep(30) #wait for system to load into ui
-            # move cursor out of the way; webview does not support cursor:none
-            #self.moveCursor()   
         else:
             self.logger.debug("will not activate view on windows")
         import webview
         self.window = webview.create_window("test","http://127.0.0.1:80?islocal=true",fullscreen=isPi, frameless=isPi)
-        webview.start(self.moveCursor)
-    
-    @catchException
-    def moveCursor(self)->None:
-        time.sleep(10)
-        # todo does not work :(
-        import pyautogui
-        pyautogui.moveTo(99999,99999)
-
-    
+        # self.report = webview.create_window("report","https://speedtest.vodafone.de/report",fullscreen=False, frameless=False)
+        # self.speedtest = webview.create_window("speedtest","https://speedtest.vodafone.de/speedtest",fullscreen=False, frameless=False)
+        webview.start()    
 
 if __name__=="__main__":
     time.sleep(30)
