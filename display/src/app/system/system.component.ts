@@ -16,10 +16,12 @@ export class SystemComponent implements OnInit {
   cpu=0
   ip=""
   last_boot=""
+  private remoteLocation="";
 
   constructor(
     private http:HttpClient,
     private cfg:ConfigService) {
+      this.remoteLocation=window.location.protocol + '//' + window.location.hostname;
   }
 
   ngOnInit(): void {
@@ -27,19 +29,19 @@ export class SystemComponent implements OnInit {
     setInterval(()=>{
       this.updateData()
     }, 1000*10)
-    this.http.get<any>(this.cfg.server.host+":"+this.cfg.server.port+"/system/lastboot").subscribe({
+    this.http.get<any>(this.remoteLocation+":"+this.cfg.server.port+"/system/lastboot").subscribe({
       next: (value: any) => {
         this.last_boot = value.lastboot
       },
       error: (error: any) => {
-        console.error("failed to get last boot from server: ", error)
+        console.error("failed to get last boot from server: ", JSON.stringify(error) )
       },
       complete: () => {}
     })
   }
 
   updateData(){
-    this.http.get<any>(this.cfg.server.host+":"+this.cfg.server.port+"/system/data").subscribe({ 
+    this.http.get<any>(this.remoteLocation+":"+this.cfg.server.port+"/system/data").subscribe({ 
       next: (value: any) => {
         this.temp = value.tmp
         this.ram = value.ram_usage
@@ -47,7 +49,7 @@ export class SystemComponent implements OnInit {
         this.ip = value.local_ip
       },
       error: (error: any) => {
-        console.error("failed to get data from server: ", error)
+        console.error("failed to get data from server: ", JSON.stringify(error))
         this.ip = "failed to get data " + error.name
       },
       complete: () => {}
