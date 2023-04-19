@@ -1,8 +1,9 @@
 .parent{
     position: absolute;
-    background-color: aqua;
+    background-color: rgb(44, 46, 46);
     width: auto;
     min-width: 200px;
+    color:aliceblue;
 }
 .label{
     float:left;
