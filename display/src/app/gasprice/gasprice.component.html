@@ -1,0 +1,8 @@
+<div class="component">
+    <table>
+        <tr *ngFor="let station of stations" [ngClass]="station.isOpen ? 'open': 'closed'">
+            <td class="price">{{station.price}} €</td> 
+            <td class="name">{{station.name}}</td>
+        </tr>
+    </table>    
+</div>

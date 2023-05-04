@@ -12,6 +12,7 @@ import { RemoteComponent } from './remote/remote.component';
 import { MirrorComponent } from './mirror/mirror.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GaspriceComponent } from './gasprice/gasprice.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CurrentWeatherDisplayComponent,
     SystemComponent,
     RemoteComponent,
-    MirrorComponent
+    MirrorComponent,
+    GaspriceComponent
   ],
   imports: [
     BrowserModule,

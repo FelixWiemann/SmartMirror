@@ -11,3 +11,8 @@
     width: auto;
     min-width: 200px;
 }
+.gas_price_container{
+    position: absolute;
+    bottom: 0cm;
+    right: 0cm;
+}
