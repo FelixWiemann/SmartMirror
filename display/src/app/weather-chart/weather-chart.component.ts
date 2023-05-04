@@ -58,7 +58,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
           })
         },1000*60*this.timer)
       })
-    },1000*10)
+    },1000)
   }
 
   async ngOnInit(): Promise<void> {
@@ -100,7 +100,7 @@ export class WeatherChartComponent extends WeatherChart implements OnInit {
         {
           yPercentageScale:{
             type: 'linear',
-            position: 'right',
+            position: 'right'
           },
           yPrecipitationScale:{
             type:'linear',

@@ -4,6 +4,9 @@
     width: auto;
     min-width: 200px;
     color:aliceblue;
+    border-radius: 20px;
+    left: 15px;
+    bottom: 20px;
 }
 .label{
     float:left;

@@ -7,7 +7,7 @@
 }
 .system_data_container{
     position: absolute;
-    bottom: 100px;
+    bottom: 0px;
     width: auto;
     min-width: 200px;
 }
