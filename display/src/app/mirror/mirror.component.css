@@ -4,6 +4,8 @@
 }
 .current_weather_container{
     position: absolute;
+    top: 15px;
+    left: 20px;
 }
 .system_data_container{
     position: absolute;

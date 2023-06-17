@@ -1,3 +1,18 @@
+.border{
+    border: grey;
+    border-radius: 20px;
+    border-style: groove;
+    width: 14.5cm;
+    background-color: lightblue;
+    position: relative;
+    max-width: 100vw;
+}
+/*1:1 width:height*/
+.border:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
 .temperature{
     font-size: 60px;
     position: absolute;
@@ -9,17 +24,7 @@
     padding-bottom: 0.1cm;
     padding-top: 0.1cm;
 } 
-.border{
-    border: grey;
-    border-radius: 20px;
-    border-style: groove;
-    width: 14.5cm;
-    height: 14.5cm;
-    background-color: lightblue;
-    position: absolute;
-    top: 15px;
-    left: 20px;
-}
+
 .weather-text{
     color: rgb(255, 255, 255);
     position: absolute;
@@ -30,9 +35,15 @@
 .weather-icon{
     position: absolute;
     width: inherit;
-    height: inherit;
+    max-width: 100vw;
     top:0cm;
     left: 0cm;
+}
+/*1:1 width:height*/
+.weather-icon:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
 }
 .time{
     color: black;
@@ -41,5 +52,6 @@
     font-size: 50px;
     line-height: 60px;
     text-align: center;
+    max-width: 100vw;
     width: inherit;
 }

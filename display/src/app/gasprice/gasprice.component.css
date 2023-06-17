@@ -1,8 +1,8 @@
 .component{
     position: absolute;
-    bottom: 2cm;
+    bottom: 1cm;
     min-width: 300px;
-    right: 2cm;
+    right: 1cm;
 }
 .name{
     min-width: 300px;
