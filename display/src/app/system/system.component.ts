@@ -23,12 +23,16 @@ export class SystemComponent implements OnInit {
     private cfg:ConfigService) {
       this.remoteLocation=window.location.protocol + '//' + window.location.hostname;
   }
-
+  
   ngOnInit(): void {
-    this.updateData()
     setInterval(()=>{
       this.updateData()
     }, 1000*10)
+    this.updateData()
+    this.updateBootTime()
+  }
+
+  updateBootTime(){
     this.http.get<any>(this.remoteLocation+":"+this.cfg.server.port+"/system/lastboot").subscribe({
       next: (value: any) => {
         this.last_boot = value.lastboot

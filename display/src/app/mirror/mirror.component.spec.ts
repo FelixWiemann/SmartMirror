@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MirrorComponent } from './mirror.component';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('MirrorComponent', () => {
   let component: MirrorComponent;
@@ -8,7 +9,8 @@ describe('MirrorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MirrorComponent ]
+      declarations: [ MirrorComponent ],
+      providers:[HttpClient, HttpHandler]
     })
     .compileComponents();
 
