@@ -23,7 +23,7 @@ pyparsing==3.0.9
 python-dateutil==2.8.2
 pythonnet==3.0.1
 pywebview==4.0.1
-QtPy==2.3.0
+QtPy==2.3.1
 reportlab==3.6.10
 requests==2.31.0
 six==1.16.0
