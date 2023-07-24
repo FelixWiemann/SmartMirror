@@ -7,7 +7,7 @@ clr-loader==0.2.5
 cssselect2==0.6.0
 cycler==0.11.0
 fake-useragent==0.1.11
-fonttools==4.33.3
+fonttools==4.41.1
 idna==3.3
 kiwisolver==1.4.3
 lxml==4.9.1
