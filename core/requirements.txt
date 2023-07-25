@@ -2,7 +2,7 @@ beautifulsoup4==4.11.1
 bottle==0.12.23
 certifi==2022.12.7
 cffi==1.15.1
-charset-normalizer==2.0.12
+charset-normalizer==3.2.0
 clr-loader==0.2.5
 cssselect2==0.6.0
 cycler==0.11.0
