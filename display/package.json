@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "prebuild" :"echo if test -f '../config.json'; then echo ''; else cp ../config_template.json ../config.json; fi | bash"  
+    "prebuild" :" [ ! -f '../config.json' ] && cp ../config_template.json ../config.json"  
   },
   "private": true,
   "dependencies": {
