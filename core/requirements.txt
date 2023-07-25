@@ -11,7 +11,7 @@ fonttools==4.41.1
 idna==3.3
 kiwisolver==1.4.3
 lxml==4.9.1
-matplotlib==3.5.2
+matplotlib==3.7.2
 numpy==1.25.1
 packaging==23.1
 Pillow==9.3.0
